@@ -1,0 +1,103 @@
+<template>
+	<div>
+		<div class="page">
+		<input type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索记录" />
+			<ul>
+				<router-link to='/inform'><li><span>***</span>新建通知<i class="right"></i></li></router-link>
+				<li><span>***</span>查看记录<i class="right"></i></li>
+				<li><span>***</span>添加好友<i class="right"></i></li>
+				<li><span>***</span>新建分组<i class="right"></i></li>
+			</ul>
+		</div>
+		<foot></foot>
+	</div>
+</template>
+
+<script>
+	import foot from "../components/foot"
+	export default{
+		data(){
+			return{
+				input: {
+					width: window.innerWidth - 25 + "px",
+				}
+			}
+		},
+		components: {
+			foot
+		},
+		beforeCreate: function(){
+			document.title = "主页"
+		},
+		methods:{
+			focus: function(){
+				var _this = this;
+				_this.input = {
+					width: window.innerWidth - 25 + "px",
+					textAlign: "left"
+				}
+			},
+			blur: function(){
+				var _this = this;
+				_this.input = {
+					width: window.innerWidth - 25 + "px",
+					textAlign: "center"
+				}
+			},
+			fanzhuan:function(){
+				var _this = this;
+				_this.up = !_this.up;
+				_this.seen = !_this.seen;
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	ul{
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		height: auto;
+		justify-content: space-around;
+	}
+	li{
+		background-color: white;
+		height: 40px;
+		line-height: 40px;
+		margin-bottom: 10px;
+		padding-left: 50px;
+	}
+	i.right{
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		background-color: transparent;
+		transform: rotate(45deg);
+		border-top: 3px solid green;
+		border-right: 3px solid green;
+		float: right;
+		margin-right: 50px;
+		margin-top: 12.5px;
+	}
+	li:active{
+	  background-color: #FCFCFC;
+	}
+	a{
+		text-decoration: none;
+		color: black;
+	}
+	a:visited{
+	  color: black;
+	}
+	input{
+		margin: 10px;
+		height: 20px;
+		line-height: 20px;
+		border: none;
+		border-radius: 5px;
+		outline: none;
+		padding-left: 5px;
+		text-align: center;
+	}
+</style>
