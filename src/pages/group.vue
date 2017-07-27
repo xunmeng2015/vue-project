@@ -6,13 +6,15 @@
 	<span class="group">添加分组<i class="right"></i></span><br><br>
 	<span class="group" v-on:click="fanzhuan">分组<i v-bind:class="['right', {'up': up},{'bottom': !up}]"></i></span><br>
 		<ul v-if="seen">
-				<li v-for="item in items">{{item.name}}</li>
+				<li v-for="group in items">{{group.name}}</li>
 		</ul>
-		<p style="font-size:15px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;">联系人</p>
+		<p style="font-size:15px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">联系人</p>
 		<ul>
 			<li v-for="item in items">{{item.name}}</li>
 		</ul>
-		<foot></foot>
+		<keep-alive>
+			<foot></foot>
+		</keep-alive>
 	</div>
 </template>
 
@@ -34,7 +36,8 @@
 					width: window.innerWidth - 25 + "px",
 				},
 				up: true,
-				seen: false
+				seen: false,
+				groups:[]
 			}
 		},
 		components: {

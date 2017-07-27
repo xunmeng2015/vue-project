@@ -3,7 +3,7 @@
     <ul>
       <router-link to="/first"><li><span class="main_icon">111</span><span>主页</span></li></router-link>
       <router-link to="/group"><li><span class="list_icon">111</span><span>通讯录</span></li></router-link>
-      <router-link to="/"><li><span class="set_icon">111</span><span>设置</span></li></router-link>
+      <router-link to="/set"><li><span class="set_icon">111</span><span>设置</span></li></router-link>
     </ul>
   </ul>
   </div>

@@ -2,14 +2,41 @@
 	<div>
 		<div class="page">
 		<input type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索记录" />
-			<ul>
+		<div class="box">
+			<i class="right"></i>
+			<p class="title">欢迎使用及事通</p>
+			<p class="content">点击了解详情</p>
+		</div>
+		<p style="font-size:12px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">历史通知</p>
+		<ul>
+				<router-link to='/inform'><li><span>***</span>新建通知<i class="right"></i></li></router-link>
+				<!-- <li><span>***</span>查看记录<i class="right"></i></li> -->
+				<!-- <li><span>***</span>添加好友<i class="right"></i></li>
+				<li><span>***</span>新建分组<i class="right"></i></li> -->
+			</ul>
+			<br>
+		<div class="box history">
+			<p class="title">欢迎使用及事通</p>
+			<p class="content">点击了解详情</p>
+		</div>
+		<div class="box">
+			<p class="title">欢迎使用及事通</p>
+			<p class="content">点击了解详情</p>
+		</div>
+		<!-- <div class="zhiding">
+			<span class="group title">欢迎使用及事通</span>
+			<span class="detail">点击了解详情</span><i class="right" style="margin-top:-15px;"></i>
+		</div><br> -->
+			<!-- <ul>
 				<router-link to='/inform'><li><span>***</span>新建通知<i class="right"></i></li></router-link>
 				<li><span>***</span>查看记录<i class="right"></i></li>
 				<li><span>***</span>添加好友<i class="right"></i></li>
 				<li><span>***</span>新建分组<i class="right"></i></li>
-			</ul>
+			</ul> -->
 		</div>
-		<foot></foot>
+		<keep-alive>
+			<foot></foot>
+		</keep-alive>
 	</div>
 </template>
 
@@ -59,14 +86,14 @@
 		display: flex;
 		flex-direction: column;
 		height: auto;
-		justify-content: space-around;
+		/*justify-content: space-around;*/
 	}
 	li{
 		background-color: white;
-		height: 40px;
-		line-height: 40px;
-		margin-bottom: 10px;
-		padding-left: 50px;
+		height: 50px;
+		line-height: 50px;
+		/*margin-bottom: 10px;*/
+		padding-left: 10px;
 	}
 	i.right{
 		display: inline-block;
@@ -77,8 +104,8 @@
 		border-top: 3px solid green;
 		border-right: 3px solid green;
 		float: right;
-		margin-right: 50px;
-		margin-top: 12.5px;
+		margin-right: 20px;
+		margin-top: 18px;
 	}
 	li:active{
 	  background-color: #FCFCFC;
@@ -99,5 +126,33 @@
 		outline: none;
 		padding-left: 5px;
 		text-align: center;
+	}
+	.group{
+		width: 100%;
+		background-color: white;
+		/*height: 35px;
+		line-height: 35px;*/
+		padding-left: 10px;
+		display: inline-block;
+	}
+	.box{
+		height: 50px;
+		background-color: white;
+		padding-left: 10px;
+	}
+	.title{
+		height: 20px;
+		/*margin-top: 10px;*/
+		padding-top: 10px;
+		/*line-height: 40px;*/
+	}
+	.content{
+		height: 20px;
+		padding-bottom: 10px;
+		color: gray;
+		font-size: 12px;
+	}
+	.history{
+		border-bottom: 1px solid #F7F7F7;
 	}
 </style>

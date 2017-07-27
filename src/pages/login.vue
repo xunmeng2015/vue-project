@@ -85,7 +85,7 @@ export default{
 		background-size: 110% 100%;
 	}
 	.login_area{
-		background-color: rgba(255, 255, 255, 0.9);
+		background-color: rgba(255, 255, 255, 0.7);
 		display: flex;
 		display: -webkit-flex;
 		align-items: center;

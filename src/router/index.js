@@ -10,6 +10,7 @@ import foot from '../components/foot'
 import first from '../pages/first'
 import inform from '../pages/inform'
 import group from '../pages/group'
+import set from '../pages/set'
 
 Vue.use(Router)
 
@@ -34,6 +35,10 @@ export default new Router({
 	  {
 	  	path: '/group',
 	  	component: group
+	  },
+	  {
+	  	path: '/set',
+	  	component: set
 	  }
   ]
 })

@@ -1,39 +1,38 @@
 <template>
 	<div class="new_inform">
-		<div class="list">
-			<ul class="all_list">
-				<li class="gruop_list">
-					<!-- 群组 -->
-				</li>
-				<li class="user_list">
-					
-				</li>
-			</ul>
-		</div>
-		<div class="inform_area">
-			<div>
-				<br><br><p>你的称呼</p><input type="text" id="name" v-focus placeholder="默认为你的手机号码" /><br><br>
-				<p>计划(活动)名称</p><input type="text" id="plan_name" /><span class="necessary">*</span><br><br>
-				<p>开始时间</p><input type="text" id="time" /><span class="necessary">*</span><br>
-				<span class="tip">*为必填项</span><br><br>
+		<div class="input_area">
+			<div class="box">
+				<p class="title">你的称呼</p>
+				<input type="text" id="name" v-model="name">
+			</div>
+			<div class="box">
+				<p class="title">计划(活动)名称<span class="necessary">*</span></p>
+				<input type="text" id="title" v-model="title">
+			</div>
+			<div class="box">
+				<p class="title">活动时间<span class="warn">(格式:yyyy-MM-dd hh:mm:ss)</span><span class="necessary">*</span><span v-if="wrong">格式出错!!</span></p>
+				<input type="text" id="time" placeholder="如：2017-07-01 17:00:00" v-model="time" @blur="blur">
+			</div>
+			<div class="box add_area">
+				<p class="title">通知对象<span class="warn">(不填则只通知自己)</span></p>
+				<input type="text" id="time" v-model="addPhone" placeholder="请输入手机号码">
+				<button class="add_btn" v-on:click="add">添加</button>
+			</div>
+			<div class="userList" v-if="show">
+					<ul>
+						<li v-for="(item, index) in items">{{item.phone}}<span v-on:click="remove(index)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
+					</ul>
+				</div>
+			<div class="select_box">
+				<p><input type="checkbox" name="time" id="oneDay" value="oneDay" v-model="selected"><label for="oneDay" class="timetip">提前一天通知</label></p>
+				<p><input type="checkbox" name="time" id="threeHour" value="threeHour" v-model="selected"><label for="threeHour" class="timetip">提前三小时通知</label></p>
+				<p><input type="checkbox" name="time" id="oneHour" value="oneHour" v-model="selected"><label for="oneHour" class="timetip">提前一小时通知</label></p>
+				<button v-on:click="sub" class="sub_btn">提交</button>
 			</div>
 		</div>
-		<center>
-			<input type="text" id="add_user" v-model="addNumber" v-bind:value="addNumber | phoneType" value="aaa" /><button class="add_btn" v-on:click="add">添加用户</button><br><br>
-		<div class="informTo">
-		<p>通知列表</p>
-			<ul>
-				<li v-for="(item, index) in items">{{item.phone}}<span v-on:click="remove(index)">&nbsp;&nbsp;&nbsp;删除</span></li>
-			</ul>
-		</div>
-		
-		</center>
-		<input type="checkbox" name="time" id="oneDay" value="oneDay" v-model="selected"><label for="oneDay" class="timetip">提前一天通知</label><br>
-		<input type="checkbox" name="time" id="threeHour" value="threeHour" v-model="selected"><label for="threeHour" class="timetip">提前三小时通知</label><br>
-		<input type="checkbox" name="time" id="oneHour" value="oneHour" v-model="selected"><label for="oneHour" class="timetip">提前一小时通知</label>
-		<!-- <p>{{ selected }}</p> -->
-		<br><br><button v-on:click="sub" class="sub_btn">提交</button>
-		<foot></foot>
+		<keep-alive>
+			<foot></foot>
+		</keep-alive>
 	</div>
 </template>
 
@@ -54,9 +53,14 @@ Vue.filter('phoneType', function(value){
 	export default{
 		data() {
 			return{
-				addNumber: "",
+				addPhone: "",
 				items : [],
-				selected: []
+				selected: [],
+				show: false,
+				title:"",
+				name:"",
+				time:"",
+				wrong:false
 			}
 		},
 		components: {
@@ -65,62 +69,74 @@ Vue.filter('phoneType', function(value){
 		beforeCreate: function(){
 			document.title = "新建通知";
 		},
-		mounted: function(){
-			
+		watch:{
+			addPhone:function(){
+				if(this.addPhone.length > 11){
+					this.addPhone = this.addPhone.substr(0, 11);
+				}
+			},
+			title:function(){
+				if(this.title.length > 20){
+					this.title = this.title.substr(0, 20);
+				}
+			},
+			name:function(){
+				if(this.title.length > 20){
+					this.title = this.title.substr(0, 20);
+				}
+			},
+			time:function(){
+				if(this.time.length > 30){
+					this.time = this.time.substr(0, 30);
+				}
+			}
 		},
 		methods: {
 			add: function(){
 				var _this = this;
-				if(!/^1\d{10}$/.test(_this.addNumber)){
+				if(!/^1\d{10}$/.test(_this.addPhone)){
 					alert("请输入正确的号码");
 				}else{
-					_this.items.push({phone: _this.addNumber, name:"华华"})
+					_this.items.push({phone: _this.addPhone, name:"华华"});
+					_this.show = true;
 				}
-				_this.addNumber = "";
+				_this.addPhone = "";
 			},
 			remove: function(idx){
 				var _this = this;
-				// alert(idx);
 				_this.items.splice(idx, 1);
+				if(_this.items.length == 0){
+					_this.show = false;
+				}
 			},
 			sub: function(){
 				var _this = this;
-				// console.log(_this.items);
 				_this.items.map(function(item, index){
 					console.log(item["name"] + " " + item["phone"]);
 				});
-				console.log(_this.selected);
-				// console.log(_this.items[0]["name"]);
-				// console.log(_this.items.length);
+				_this.selected.map(function(i){
+					console.log(i);
+				});
+			},
+			blur: function(){
+				var _this = this;
+				if(!/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/.test(_this.time)){
+					// console.log("wrong");
+					_this.wrong = true;
+					_this.time = "";
+				}else{
+					_this.wrong = false;
+				}
 			}
 		}
 	}
 </script>
 
-<style scoped>
-	.new_inform{
+<style scoped>.new_inform{
 		width: 100%;
 	}
-	.inform_area p{
-		display: inline-block;
-		width: 110px;
-		text-align: right;
-		margin-right: 5px;
-		height: 20px;
-		line-height: 20px;
-	}
 	input{
-		width: 30px;
 		height: 20px;
-	}
-	.inform_area input{
-		width: 170px;
-		margin-left: 10px;
-		height: 20px;
-	}
-	.tip{
-		/*float: right;*/
-		margin-left: 125px;
 	}
 	button{
 		height: 26px;
@@ -133,10 +149,80 @@ Vue.filter('phoneType', function(value){
 		width: 100px;
 	}
 	.sub_btn{
-		margin-left:7px;
+		width: 100%;
 	}
 	.timetip{
 		float: right;
 		margin-right: 10px;
 	}
+	.box{
+		height: 40px;
+		background-color: white;
+		padding: 10px;
+		border-radius: 5px;
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-top: 10px;
+		box-shadow: 0px 0px 10px 1px lightgray;
+	}
+	.title{
+		font-size: 15px;
+		color: green;
+		margin-bottom: 3px;
+	}
+	.box input{
+		border: none;
+		border-bottom: 1px solid black;
+		width: 100%;
+		outline: none;
+	}
+	.warn{
+		font-size: 12px;
+		color: red;
+	}
+	.userList{
+		width: 90%;
+		/*min-height: 30px;*/
+		height: auto;
+		background-color: white;
+		/*position: absolute;*/
+		z-index: 1;
+		margin: 0 auto;
+		margin-bottom: 10px;
+		padding-bottom: 10px;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		box-shadow: 1px 1px 10px 1px lightgray;
+		padding-top: 10px;
+		text-align: center;
+	}
+	.user{
+		margin-top: none;
+	}
+	.add_area{
+		position: relative;
+		height: 80px;
+		z-index: 2;
+		/*margin-bottom: 20px;*/
+	}
+	.add_btn{
+		width: 100%;
+		margin-top: 10px;
+		z-index: 5;
+	}
+
+	.select_box{
+		height: auto;
+		background-color: white;
+		padding: 10px;
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-top: 10px;
+	}
+
+	.select_box p{
+		height: 30px;
+		line-height: 30px;
+	}
+	.select_box input{}
 </style>
