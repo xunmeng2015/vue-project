@@ -1,12 +1,12 @@
 <template>
-	<div>
+	<div class="container">
 	<br>
 		<div class="page">
 		<ul>
 				<router-link to='/inform'><li><span>***</span>新建通知<i class="right"></i></li></router-link>
 				<li><span>***</span>查看记录<i class="right"></i></li>
-				<li><span>***</span>添加好友<i class="right"></i></li>
-				<li><span>***</span>新建分组<i class="right"></i></li>
+				<router-link to='/adduser'><li><span>***</span>添加好友<i class="right"></i></li></router-link>
+				<router-link to='/addgroup'><li><span>***</span>新建分组<i class="right"></i></li></router-link>
 			</ul>
 		</div>
 		<keep-alive>
@@ -29,7 +29,7 @@
 			foot
 		},
 		beforeCreate: function(){
-			document.title = "主页"
+			document.title = "及事通"
 		},
 		methods:{
 			focus: function(){
@@ -84,12 +84,5 @@
 	}
 	li:active{
 	  background-color: #FCFCFC;
-	}
-	a{
-		text-decoration: none;
-		color: black;
-	}
-	a:visited{
-	  color: black;
 	}
 </style>

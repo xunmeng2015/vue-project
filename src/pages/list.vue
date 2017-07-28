@@ -2,11 +2,11 @@
 	<div class="list">
 	<!-- <top></top> -->
 	<input type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索号码或名字" />
-	<span class="group">添加好友<i class="right"></i></span><br>
-	<span class="group">添加分组<i class="right"></i></span><br><br>
+	<router-link to='/adduser'><span class="group">添加联系人<i class="right"></i></span></router-link><br>
+	<router-link to='/addgroup'><span class="group">添加分组<i class="right"></i></span></router-link><br><br>
 	<span class="group" v-on:click="fanzhuan">分组<i v-bind:class="['right', {'up': up},{'bottom': !up}]"></i></span><br>
 		<ul v-if="seen">
-				<li v-for="group in items">{{group.name}}</li>
+				<li v-for="group in groups">{{group.name}}</li>
 		</ul>
 		<p style="font-size:15px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">联系人</p>
 		<ul>
@@ -37,12 +37,15 @@
 				},
 				up: true,
 				seen: false,
-				groups:[]
+				groups:this.$store.state.group_list
 			}
 		},
 		components: {
 			foot,
 			top
+		},
+		beforeCreate: function(){
+			document.title = "及事通"
 		},
 		methods:{
 			focus: function(){
@@ -64,6 +67,7 @@
 				_this.up = !_this.up;
 				_this.seen = !_this.seen;
 			}
+
 		}
 	}
 </script>
@@ -112,7 +116,7 @@
 		float: right;
 		border-top: 3px solid green;
 		border-right: 3px solid green;
-		margin-right: 50px;
+		margin-right: 25px;
 		margin-top: 10px;
 	}
 	i.up{

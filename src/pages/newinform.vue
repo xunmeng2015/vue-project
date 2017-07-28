@@ -20,7 +20,7 @@
 			</div>
 			<div class="userList" v-if="show">
 					<ul>
-						<li v-for="(item, index) in items">{{item.phone}}<span v-on:click="remove(index)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
+						<li v-for="(item, index) in items">{{item.phone}}<span v-on:click="remove(index)" class="remove">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
 					</ul>
 				</div>
 			<div class="select_box">
@@ -132,7 +132,8 @@ Vue.filter('phoneType', function(value){
 	}
 </script>
 
-<style scoped>.new_inform{
+<style scoped>
+.new_inform{
 		width: 100%;
 	}
 	input{
@@ -182,10 +183,8 @@ Vue.filter('phoneType', function(value){
 	}
 	.userList{
 		width: 90%;
-		/*min-height: 30px;*/
 		height: auto;
 		background-color: white;
-		/*position: absolute;*/
 		z-index: 1;
 		margin: 0 auto;
 		margin-bottom: 10px;
@@ -203,14 +202,11 @@ Vue.filter('phoneType', function(value){
 		position: relative;
 		height: 80px;
 		z-index: 2;
-		/*margin-bottom: 20px;*/
 	}
 	.add_btn{
 		width: 100%;
 		margin-top: 10px;
-		z-index: 5;
 	}
-
 	.select_box{
 		height: auto;
 		background-color: white;
@@ -219,10 +215,11 @@ Vue.filter('phoneType', function(value){
 		margin-right: 10px;
 		margin-top: 10px;
 	}
-
 	.select_box p{
 		height: 30px;
 		line-height: 30px;
 	}
-	.select_box input{}
+	.remove{
+		color: red;
+	}
 </style>

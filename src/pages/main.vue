@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="page">
+		<div class="container">
 		<input type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索记录" />
 		<div class="box">
 			<i class="right"></i>
@@ -54,7 +54,7 @@
 			foot
 		},
 		beforeCreate: function(){
-			document.title = "主页"
+			document.title = "及事通"
 		},
 		methods:{
 			focus: function(){
@@ -86,13 +86,11 @@
 		display: flex;
 		flex-direction: column;
 		height: auto;
-		/*justify-content: space-around;*/
 	}
 	li{
 		background-color: white;
 		height: 50px;
 		line-height: 50px;
-		/*margin-bottom: 10px;*/
 		padding-left: 10px;
 	}
 	i.right{
@@ -109,13 +107,6 @@
 	}
 	li:active{
 	  background-color: #FCFCFC;
-	}
-	a{
-		text-decoration: none;
-		color: black;
-	}
-	a:visited{
-	  color: black;
 	}
 	input{
 		margin: 10px;
