@@ -51,6 +51,18 @@ export default{
 	beforeCreate: function(){
 		document.title = "及事通 登录"
 	},
+	watch:{
+		phone: function(){
+			if(this.phone.length > 11){
+				this.phone = this.phone.substr(0, 11);
+			}
+		},
+		code: function(){
+			if(this.code.length > 8){
+				this.code = this.code.substr(0, 8);
+			}
+		}
+	},
 	methods: {
 		getCode: function(){
 			var _this = this;

@@ -36,14 +36,14 @@ import foot from '../components/foot'
 			foot
 		},
 		watch:{
-			phone:function(){
-				if(this.phone.length > 11){
-					this.phone = this.phone.substr(0, 11);
+			addPhone:function(){
+				if(this.addPhone.length > 11){
+					this.addPhone = this.addPhone.substr(0, 11);
 				}
 			},
 			name:function(){
-				if(this.name.length > 20){
-					this.name = this.name.substr(0, 20);
+				if(this.name.length > 10){
+					this.name = this.name.substr(0, 10);
 				}
 			}
 		},
