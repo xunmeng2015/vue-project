@@ -53,6 +53,11 @@ import foot from '../components/foot'
 				if(!_this.wrong && _this.name){
 					if(confirm("确定添加吗")){
 						console.log(_this.name + " " + _this.phone);
+						_this.$store.state.user_list.push({
+							name:_this.name,
+							phone:_this.phone
+						})
+
 					}else{return;}
 				}
 				else{

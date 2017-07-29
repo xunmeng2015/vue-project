@@ -24,14 +24,7 @@
 	export default{
 		data(){
 			return {
-				items:[{
-					name:"华华",
-					phone:"18826103503"
-				},
-				{
-					name:"华华",
-					phone:"18826103503"
-				}],
+				items:this.$store.state.user_list,
 				input: {
 					width: window.innerWidth - 25 + "px",
 				},

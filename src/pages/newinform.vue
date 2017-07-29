@@ -10,8 +10,8 @@
 				<input type="text" id="title" v-model="title">
 			</div>
 			<div class="box">
-				<p class="title">活动时间<span class="warn">(格式:yyyy-MM-dd hh:mm:ss)</span><span class="necessary">*</span><span v-if="wrong">格式出错!!</span></p>
-				<input type="text" id="time" placeholder="如：2017-07-01 17:00:00" v-model="time" @blur="blur">
+				<p class="title">活动时间<span class="warn">(格式:yyyy-MM-dd hh:mm)</span><span class="necessary">*</span><span v-if="wrong">格式出错!!</span></p>
+				<input type="text" id="time" placeholder="如：2017-07-01 17:59" v-model="time" @blur="blur">
 			</div>
 			<div class="box add_area">
 				<p class="title">通知对象<span class="warn">(不填则只通知自己)</span></p>
@@ -120,7 +120,7 @@ Vue.filter('phoneType', function(value){
 			},
 			blur: function(){
 				var _this = this;
-				if(!/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/.test(_this.time)){
+				if(!/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(_this.time)){
 					// console.log("wrong");
 					_this.wrong = true;
 					_this.time = "";

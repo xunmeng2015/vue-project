@@ -3,7 +3,7 @@
 		<div v-bind:style="login" class="login_area">
 			<div class="login_box">
 				<div class="item">
-					<p class="area">+86</p><input type="text" id="phone" v-model="phone" placeholder="无需注册即可使用" />
+					<p class="area">+86</p><input type="text" id="phone" v-model="phone" placeholder="请输入手机号码" />
 				</div>
 				<div class="item">
 					<p class="warn" v-if="wrong">请输入正确的手机号码</p>
@@ -39,23 +39,40 @@ export default{
 			code: ""
 		}
 	},
-	watch: {
-		phone: function(){
-			if(!/^1\d{10}$/g.test(this.phone)){
-				this.wrong = true;
-			}else{
-				this.wrong = false;
-			}
-		}
-	},
 	beforeCreate: function(){
-		document.title = "及事通 登录"
+		document.title = "及事通 登录";
 	},
+	mounted: function(){
+				var _this = this;
+				if(localStorage.getItem("codetime") != null){
+				var sub = 60 - (Math.floor(new Date().getTime() / 1000) - localStorage.getItem("codetime"));
+				if(sub > 0){
+					// console.log(_this.code_tip);
+					_this.dis = true;
+					var a = setInterval(function(){
+						_this.code_tip = sub + "s重新获取";
+						// console.log(_this.code_tip);
+						sub--;
+						if(sub < 0){
+							clearInterval(a);
+							_this.dis = false;
+							_this.code_tip = "获取验证码";
+						}
+					}, 1000);
+				}
+			}
+		},
 	watch:{
 		phone: function(){
 			if(this.phone.length > 11){
 				this.phone = this.phone.substr(0, 11);
 			}
+			if(!/^1\d{10}$/g.test(this.phone)){
+				this.wrong = true;
+			}else{
+				this.wrong = false;
+			}
+			
 		},
 		code: function(){
 			if(this.code.length > 8){
@@ -66,25 +83,36 @@ export default{
 	methods: {
 		getCode: function(){
 			var _this = this;
-			_this.dis = true;
-			var s = 60;
-			var a = setInterval(function(){
-				_this.code_tip = "重新获取(" + s + ")";
-				s--;
-				if(s < 0){
-					clearInterval(a);
-					_this.dis = false;
-					_this.code_tip = "获取验证码";
-				}
-			}, 1000);
+			if(!_this.wrong && _this.phone){
+				_this.$http.post('/inform/getCode',{phone:_this.phone}, {timeout:10000}).then((data) => {
+					console.log(data);
+				}, (err) => {
+					console.log(err);
+				});
+				_this.dis = true;
+				localStorage.setItem("codetime", Math.floor(new Date().getTime() / 1000));
+				var s = 60;
+				var a = setInterval(function(){
+					_this.code_tip = s + "s重新获取";
+					s--;
+					if(s < 0){
+						clearInterval(a);
+						_this.dis = false;
+						_this.code_tip = "获取验证码";
+					}
+				}, 1000);
+			}else{
+				alert("号码有误，请重新输入");
+			}
 		},
 		sub: function(){
 			var _this = this;
-			if(!_this.right && /^\d{6}$/.test(_this.code) && _this.phone){
+			if(!_this.wrong && /^\d{6}$/.test(_this.code) && _this.phone){
 				// alert("登录成功");
-				window.location.href = '/#/first';
+				
+				window.location.href = '/first';
 			}else{
-				alert("输入有误，请重新输入");
+				alert("信息输入有误，请重新输入");
 			}
 		}
 	}

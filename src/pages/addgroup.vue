@@ -78,6 +78,7 @@ import foot from '../components/foot'
 				_this.items.map(function(item, index){
 					console.log(item["phone"]);
 				});
+				
 			}
 		}
 	}

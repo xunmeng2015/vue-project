@@ -9,7 +9,7 @@
 		</div>
 		<p style="font-size:12px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">历史通知</p>
 		<ul>
-				<router-link to='/inform'><li><span>***</span>新建通知<i class="right"></i></li></router-link>
+				<router-link to='/inform'><li><!-- <span>***</span> -->新建通知<i class="right"></i></li></router-link>
 				<!-- <li><span>***</span>查看记录<i class="right"></i></li> -->
 				<!-- <li><span>***</span>添加好友<i class="right"></i></li>
 				<li><span>***</span>新建分组<i class="right"></i></li> -->
