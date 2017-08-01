@@ -1,10 +1,10 @@
 <template>
 	<div class="container">
 		<div class="box">
-			<p class="title">昵称<span class="necessary">*</span></p>
+			<p class="title">昵称<span class="necessary">*</span><span v-if="special" class="wrong">   昵称不能包含<>.*+-/"'</span></p>
 			<input type="text" id="name" v-model="name">
 			<p class="title">联系方式<span class="necessary">*</span><span v-if="wrong" class="wrong">格式出错!!</span></p>
-			<input type="text" id="name" v-model="phone"  @blur="blur">
+			<input type="number" id="name" v-model="phone">
 			<button class="add_btn" v-on:click="add">添加</button>
 		</div>
 		<foot></foot>
@@ -18,7 +18,8 @@ import foot from '../components/foot'
 			return {
 				name:"",
 				phone:"",
-				wrong:false
+				wrong:false,
+				special:false
 			}
 		},
 		beforeCreate: function(){
@@ -29,39 +30,62 @@ import foot from '../components/foot'
 		},
 		watch:{
 			phone:function(){
+				if(!/1\d{10}/.test(this.phone)){
+					this.wrong = true;
+				}else{
+					this.wrong = false;
+				}
 				if(this.phone.length > 11){
 					this.phone = this.phone.substr(0, 11);
 				}
 			},
 			name:function(){
+				if(/[<>.*+-/"']/g.test(this.name)){
+					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);
+					this.special = true;
+				}else{
+					this.special = false;
+				}
 				if(this.name.length > 20){
 					this.name = this.name.substr(0, 20);
 				}
 			}
 		},
 		methods:{
-			blur:function(){
+			// blur:function(){
+			// 	var _this = this;
+			// 	if(!/1\d{10}/.test(_this.phone)){
+			// 		_this.wrong = true;
+			// 	}else{
+			// 		_this.wrong = false;
+			// 	}
+			// },
+			add: function(){			//添加好友
 				var _this = this;
-				if(!/1\d{10}/.test(_this.phone)){
-					_this.wrong = true;
-				}else{
-					_this.wrong = false;
-				}
-			},
-			add: function(){
-				var _this = this;
-				if(!_this.wrong && _this.name){
+				if(!_this.wrong && _this.name && _this.phone && !_this.special){
 					if(confirm("确定添加吗")){
 						console.log(_this.name + " " + _this.phone);
-						_this.$store.state.user_list.push({
-							name:_this.name,
-							phone:_this.phone
-						})
-
+						this.$http.post('/inform/adduser', 
+							{sign:this.$route.params.sign,
+							 name:_this.name,
+							 phone:_this.phone},
+							{timeout:10000}).then((data) => {
+								console.log(data);
+								var statu = data.body.result;
+								if(statu == "repeat"){
+									alert("该号码已存在!");
+								}else{
+									alert("添加成功");
+									_this.$store.state.user_list.push({
+									name:_this.name,
+									phone:_this.phone
+								});
+								}
+							})
 					}else{return;}
 				}
 				else{
-					alert("信息不完全！");
+					alert("输入信息不符合要求！");
 				}
 			}
 		}
@@ -100,7 +124,8 @@ import foot from '../components/foot'
 		color: red;
 		font-size: 18px;
 	}
-	.wrong{
+	.wrong, .special{
 		color: red;
+		font-size: 13px;
 	}
 </style>

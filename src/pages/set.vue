@@ -3,10 +3,11 @@
 	<br>
 		<div class="page">
 		<ul>
-				<router-link to='/inform'><li><span>***</span>新建通知<i class="right"></i></li></router-link>
-				<li><span>***</span>查看记录<i class="right"></i></li>
-				<router-link to='/adduser'><li><span>***</span>添加好友<i class="right"></i></li></router-link>
-				<router-link to='/addgroup'><li><span>***</span>新建分组<i class="right"></i></li></router-link>
+				<router-link :to="{name: 'inform', params:{sign: this.$route.params.sign }}"><li>新建通知<i class="right"></i></li></router-link>
+				<li>查看记录<i class="right"></i></li>
+				<router-link to='/adduser'><li>添加好友<i class="right"></i></li></router-link>
+				<router-link to='/addgroup'><li>新建分组<i class="right"></i></li></router-link>
+				<li v-on:click="logout">退出系统</li>
 			</ul>
 		</div>
 		<keep-alive>
@@ -50,6 +51,10 @@
 				var _this = this;
 				_this.up = !_this.up;
 				_this.seen = !_this.seen;
+			},
+			logout: function(){
+				localStorage.removeItem("logintime");
+				this.$router.push({name: 'login'});
 			}
 		}
 	}

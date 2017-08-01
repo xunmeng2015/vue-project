@@ -1,10 +1,11 @@
 <template>
 	<div class="container">
 		<div class="box">
-			<p class="title">分组名称<span class="necessary">*</span></p>
+			<p class="title">分组名称<span class="necessary">*</span><span v-if="special" class="wrong">   昵称不能包含<>.*+-/"'!</span></p>
 			<input type="text" id="name" v-model="name">
-				<p class="title">添加对象</p>
+				<p class="title">添加对象<span v-if="wrong" class="wrong">格式出错!!</span></p>
 				<input type="text" id="time" v-model="addPhone" placeholder="请输入手机号码">
+				<span class="list" v-on:click="chooselist">从通讯录选择</span>
 				<button class="add_btn" v-on:click="add">添加</button>
 		</div>
 		<div class="userList" v-if="show">
@@ -13,6 +14,7 @@
 				</ul>
 		</div>
 		<br style="clear:both">
+		<chooselist :showlist="showlist" v-on:hide="hide"></chooselist>
 		<button v-on:click="sub" class="sub-btn">提交</button><br>
 		<foot></foot>
 	</div>
@@ -20,66 +22,81 @@
 
 <script>
 import foot from '../components/foot'
+import chooselist from '../components/chooselist'
 	export default{
 		data(){
 			return {
 				name:"",
 				addPhone:"",
 				items:[],
-				show:false
+				show:false,
+				special:false,
+				wrong: false,
+				showlist: false
 			}
 		},
 		beforeCreate: function(){
-			document.title = "新建联系人"
+			document.title = "新建分组"
 		},
 		components: {
-			foot
+			foot,
+			chooselist
 		},
 		watch:{
 			addPhone:function(){
 				if(this.addPhone.length > 11){
 					this.addPhone = this.addPhone.substr(0, 11);
 				}
+				if(!/1\d{10}/.test(this.addPhone)){
+					this.wrong = true;
+				}else{
+					this.wrong = false;
+				}
 			},
 			name:function(){
-				if(this.name.length > 10){
-					this.name = this.name.substr(0, 10);
+				if(this.name.length > 15){
+					this.name = this.name.substr(0, 15);
+				}
+				if(/[<>.*+-/"'!]/g.test(this.name)){
+					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
+					this.special = true;
+				}else{
+					this.special = false;
 				}
 			}
 		},
 		methods:{
-			blur:function(){
-				var _this = this;
-				if(!/1\d{10}/.test(_this.phone)){
-					_this.wrong = true;
-				}else{
-					_this.wrong = false;
-				}
-			},
 			add: function(){
-				var _this = this;
-				if(!/^1\d{10}$/.test(_this.addPhone)){
+				// var _this = this;
+				if(!/^1\d{10}$/.test(this.addPhone)){
 					alert("请输入正确的号码");
 				}else{
-					_this.items.push({phone: _this.addPhone});
-					_this.show = true;
+					this.items.push({phone: this.addPhone});
+					this.show = true;
 				}
-				_this.addPhone = "";
+				this.addPhone = "";
 			},
 			remove: function(idx){
-				var _this = this;
-				_this.items.splice(idx, 1);
-				if(_this.items.length == 0){
-					_this.show = false;
+				// var _this = this;
+				this.items.splice(idx, 1);
+				if(this.items.length == 0){
+					this.show = false;
 				}
 			},
 			sub: function(){
-				var _this = this;
-				_this.items.map(function(item, index){
+				// var _this = this;
+				this.items.map(function(item, index){
 					console.log(item["phone"]);
 				});
-				
-			}
+			},
+			hide: function(){
+				// var _this = this;
+				this.showlist = false;
+			},
+			chooselist: function(){
+				// var _this = this;
+				this.showlist = true;
+			},
 		}
 	}
 </script>
@@ -148,5 +165,15 @@ import foot from '../components/foot'
 		margin-left: 5%;
 		height: 30px;
 		font-size: 16px;
+	}
+	.list{
+		color: blue;
+		font-size: 14px;
+		float: right;
+		margin-bottom: 5px;
+	}
+	.wrong, .special{
+		color: red;
+		font-size: 13px;
 	}
 </style>

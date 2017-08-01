@@ -5,9 +5,33 @@ import mutations from './mutations'
 Vue.use(Vuex)
 
 const state = {
-	user_list:[],
-	group_list:[],
-	inform_history:[]
+	user_list:[{
+		name:"华华",
+		phone: "18826103503"
+	},
+	{
+		name:"华华",
+		phone: "18826103501"
+	},
+	{
+		name:"华华",
+		phone: "18826103502"
+	}],
+	group_list:[
+	{
+		name:"华华",
+		phone: "18826103503"
+	},
+	{
+		name:"华华",
+		phone: "18826103503"
+	},
+	{
+		name:"华华",
+		phone: "18826103503"
+	}],
+	inform_history:[],
+	sign: ""
 }
 
 export default new Vuex.Store({

@@ -2,11 +2,11 @@
 	<div class="new_inform">
 		<div class="input_area">
 			<div class="box">
-				<p class="title">你的称呼</p>
-				<input type="text" id="name" v-model="name">
+				<p class="title">你的称呼<span v-if="special" class="warn">   不能包含<>.*+-/"'!</span></p>
+				<input type="text" id="name" v-model="name" placeholder="不填则默认自己的号码">
 			</div>
 			<div class="box">
-				<p class="title">计划(活动)名称<span class="necessary">*</span></p>
+				<p class="title">计划(活动)名称<span class="necessary">*</span><span v-if="special1" class="warn">   不能包含<>.*+-/"'!</span></p>
 				<input type="text" id="title" v-model="title">
 			</div>
 			<div class="box">
@@ -17,6 +17,7 @@
 				<p class="title">通知对象<span class="warn">(不填则只通知自己)</span></p>
 				<input type="text" id="time" v-model="addPhone" placeholder="请输入手机号码">
 				<button class="add_btn" v-on:click="add">添加</button>
+				<span class="list" v-on:click="chooselist">从通讯录选择</span>
 			</div>
 			<div class="userList" v-if="show">
 					<ul>
@@ -30,6 +31,7 @@
 				<button v-on:click="sub" class="sub_btn">提交</button>
 			</div>
 		</div>
+		<chooselist :showlist="showlist" v-on:hide="hide"></chooselist>
 		<keep-alive>
 			<foot></foot>
 		</keep-alive>
@@ -38,6 +40,7 @@
 
 <script>
 import foot from '../components/foot'
+import chooselist from '../components/chooselist'
 import Vue from 'vue'
 Vue.directive("focus",{
 		inserted: function(el){
@@ -60,11 +63,15 @@ Vue.filter('phoneType', function(value){
 				title:"",
 				name:"",
 				time:"",
-				wrong:false
+				wrong:false,
+				showlist:false,
+				special: false,
+				special1:false
 			}
 		},
 		components: {
-			foot
+			foot,
+			chooselist
 		},
 		beforeCreate: function(){
 			document.title = "新建通知";
@@ -79,10 +86,22 @@ Vue.filter('phoneType', function(value){
 				if(this.title.length > 20){
 					this.title = this.title.substr(0, 20);
 				}
+				if(/[<>.*+-/"'!]/g.test(this.title)){
+					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
+					this.special1 = true;
+				}else{
+					this.special1 = false;
+				}
 			},
 			name:function(){
-				if(this.title.length > 20){
-					this.title = this.title.substr(0, 20);
+				if(/[<>.*+-/"'!]/g.test(this.name)){
+					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
+					this.special = true;
+				}else{
+					this.special = false;
+				}
+				if(this.name.length > 20){
+					this.name = this.name.substr(0, 20);
 				}
 			},
 			time:function(){
@@ -127,99 +146,19 @@ Vue.filter('phoneType', function(value){
 				}else{
 					_this.wrong = false;
 				}
+			},
+			chooselist: function(){
+				var _this = this;
+				_this.showlist = true;
+			},
+			hide: function(){
+				var _this = this;
+				_this.showlist = false;
 			}
 		}
 	}
 </script>
 
-<style scoped>
-.new_inform{
-		width: 100%;
-	}
-	input{
-		height: 20px;
-	}
-	button{
-		height: 26px;
-	}
-	.necessary{
-		color: red;
-		font-size: 18px;
-	}
-	#add_user{
-		width: 100px;
-	}
-	.sub_btn{
-		width: 100%;
-	}
-	.timetip{
-		float: right;
-		margin-right: 10px;
-	}
-	.box{
-		height: 40px;
-		background-color: white;
-		padding: 10px;
-		border-radius: 5px;
-		margin-left: 10px;
-		margin-right: 10px;
-		margin-top: 10px;
-		box-shadow: 0px 0px 10px 1px lightgray;
-	}
-	.title{
-		font-size: 15px;
-		color: green;
-		margin-bottom: 3px;
-	}
-	.box input{
-		border: none;
-		border-bottom: 1px solid black;
-		width: 100%;
-		outline: none;
-	}
-	.warn{
-		font-size: 12px;
-		color: red;
-	}
-	.userList{
-		width: 90%;
-		height: auto;
-		background-color: white;
-		z-index: 1;
-		margin: 0 auto;
-		margin-bottom: 10px;
-		padding-bottom: 10px;
-		border-bottom-left-radius: 5px;
-		border-bottom-right-radius: 5px;
-		box-shadow: 1px 1px 10px 1px lightgray;
-		padding-top: 10px;
-		text-align: center;
-	}
-	.user{
-		margin-top: none;
-	}
-	.add_area{
-		position: relative;
-		height: 80px;
-		z-index: 2;
-	}
-	.add_btn{
-		width: 100%;
-		margin-top: 10px;
-	}
-	.select_box{
-		height: auto;
-		background-color: white;
-		padding: 10px;
-		margin-left: 10px;
-		margin-right: 10px;
-		margin-top: 10px;
-	}
-	.select_box p{
-		height: 30px;
-		line-height: 30px;
-	}
-	.remove{
-		color: red;
-	}
+<style  src="../assets/css/inform.css" scoped>
+
 </style>

@@ -48,10 +48,9 @@
 	}
 	.userList{
 		width: 90%;
-		/*min-height: 30px;*/
 		height: auto;
+		max-height: 60px;
 		background-color: white;
-		/*position: absolute;*/
 		z-index: 1;
 		margin: 0 auto;
 		margin-bottom: 10px;
@@ -61,22 +60,20 @@
 		box-shadow: 1px 1px 10px 1px lightgray;
 		padding-top: 10px;
 		text-align: center;
+		overflow-y: scroll;
 	}
 	.user{
 		margin-top: none;
 	}
 	.add_area{
 		position: relative;
-		height: 80px;
+		height: 95px;
 		z-index: 2;
-		/*margin-bottom: 20px;*/
 	}
 	.add_btn{
 		width: 100%;
 		margin-top: 10px;
-		z-index: 5;
 	}
-
 	.select_box{
 		height: auto;
 		background-color: white;
@@ -85,9 +82,16 @@
 		margin-right: 10px;
 		margin-top: 10px;
 	}
-
 	.select_box p{
 		height: 30px;
 		line-height: 30px;
 	}
-	.select_box input{}
+	.remove{
+		color: red;
+	}
+	.list{
+		color: blue;
+		font-size: 14px;
+		float: right;
+		margin-top: 10px;
+	}

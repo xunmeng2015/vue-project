@@ -15,6 +15,8 @@ const group = resolve => require(['../pages/list'], resolve)//通讯录
 const set = resolve => require(['../pages/set'], resolve)//设置页面
 const adduser = resolve => require(['../pages/addUser'], resolve)//添加联系人
 const addgroup = resolve => require(['../pages/addgroup'], resolve)//添加联系人
+const choose = resolve => require(['../components/chooselist'], resolve)
+const showfriend = resolve => require(['../components/showfriend'], resolve)
 
 Vue.use(Router)
 
@@ -22,6 +24,7 @@ export default new Router({
   routes: [
 	  {
 	  	path: '/',
+	  	name: 'login',
 	  	component: login
 	  },
 	  {
@@ -29,28 +32,42 @@ export default new Router({
 	  	component: foot
 	  },
 	  {
-	  	path: '/first',
+	  	path: '/first/:sign',
+	  	name: 'first',
 	  	component: first
 	  },
 	  {
-	  	path: '/inform',
+	  	path: '/inform/:sign',
+	  	name: 'inform',
 	  	component: inform
 	  },
 	  {
-	  	path: '/group',
+	  	path: '/group/:sign',
+	  	name: 'group',
 	  	component: group
 	  },
 	  {
-	  	path: '/set',
+	  	path: '/set/:sign',
+	  	name: 'set',
 	  	component: set
 	  },
 	  {
-	  	path: '/adduser',
+	  	path: '/adduser/:sign',
+	  	name: 'adduser',
 	  	component: adduser
 	  },
 	  {
-	  	path: '/addgroup',
+	  	path: '/addgroup/:sign',
+	  	name: 'addgroup',
 	  	component: addgroup
+	  },
+	  {
+	  	path: '/choose',
+	  	component: choose
+	  },
+	  {
+	  	path: '/showfriend',
+	  	component: showfriend
 	  }
   ]
 })

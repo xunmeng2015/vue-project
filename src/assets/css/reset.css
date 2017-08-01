@@ -17,6 +17,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	color: black;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -48,3 +49,23 @@ a{
 a:visited{
 	color: black;
 }
+
+::-webkit-scrollbar  
+			{  
+			    width: 1px;  
+			    height: 16px;  
+			    background-color: #EBEBEB;  
+			} 
+			::-webkit-scrollbar-track  
+			{  
+			    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  
+			    border-radius: 10px;  
+			    background-color: #F5F5F5;  
+			}  
+			/*定义滑块 内阴影+圆角*/  
+			::-webkit-scrollbar-thumb  
+			{  
+			    border-radius: 10px;  
+			    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);  
+			    background-color: #EBEBEB;
+			} 

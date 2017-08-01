@@ -3,13 +3,13 @@
 		<div v-bind:style="login" class="login_area">
 			<div class="login_box">
 				<div class="item">
-					<p class="area">+86</p><input type="text" id="phone" v-model="phone" placeholder="请输入手机号码" />
+					<p class="area">+86</p><input type="number" id="phone" v-model="phone" placeholder="请输入手机号码" />
 				</div>
 				<div class="item">
 					<p class="warn" v-if="wrong">请输入正确的手机号码</p>
 				</div>
 				<div class="item">
-					<input type="text" id="code" v-model="code" /><button v-text="code_tip" v-on:click="getCode" :disabled="dis" id="get_code"></button>
+					<input type="number" id="code" v-model="code" /><button v-text="code_tip" v-on:click="getCode" :disabled="dis" id="get_code"></button>
 				</div>
 				<div class="item">
 					<button id="sub" v-on:click="sub">登录</button>
@@ -40,7 +40,7 @@ export default{
 		}
 	},
 	beforeCreate: function(){
-		document.title = "及事通 登录";
+		document.title = "小信使 登录";
 	},
 	mounted: function(){
 				var _this = this;
@@ -67,12 +67,14 @@ export default{
 			if(this.phone.length > 11){
 				this.phone = this.phone.substr(0, 11);
 			}
+			// if(/[^0-9]/g.test(this.phone)){
+			// 	this.phone = this.phone.length > 11 ? this.phone.substr(0, 11) : this.phone.substr(0, this.phone.length - 1);
+			// }
 			if(!/^1\d{10}$/g.test(this.phone)){
 				this.wrong = true;
 			}else{
 				this.wrong = false;
 			}
-			
 		},
 		code: function(){
 			if(this.code.length > 8){
@@ -108,11 +110,20 @@ export default{
 		sub: function(){
 			var _this = this;
 			if(!_this.wrong && /^\d{6}$/.test(_this.code) && _this.phone){
-				// alert("登录成功");
-				
-				window.location.href = '/first';
+				_this.$http.post('/inform/login', {phone: _this.phone, code:_this.code}, {timeout: 10000}).then((data) => {
+					console.log(data.body.result);
+					var sign = data.body.result;
+					if(sign == "no"){
+						alert("验证码不对！");
+					}else{
+						this.$store.commit('savesign', sign);
+						this.$router.push({name:'first', params:{sign:sign}});
+					}
+				}, (err) => {
+					console.log(err);
+				});
 			}else{
-				alert("信息输入有误，请重新输入");
+				alert("信息输入有误！");
 			}
 		}
 	}
