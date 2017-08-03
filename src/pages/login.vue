@@ -43,20 +43,19 @@ export default{
 		document.title = "小信使 登录";
 	},
 	mounted: function(){
-				var _this = this;
 				if(localStorage.getItem("codetime") != null){
 				var sub = 60 - (Math.floor(new Date().getTime() / 1000) - localStorage.getItem("codetime"));
 				if(sub > 0){
 					// console.log(_this.code_tip);
-					_this.dis = true;
+					this.dis = true;
 					var a = setInterval(function(){
-						_this.code_tip = sub + "s重新获取";
+						this.code_tip = sub + "s重新获取";
 						// console.log(_this.code_tip);
 						sub--;
 						if(sub < 0){
 							clearInterval(a);
-							_this.dis = false;
-							_this.code_tip = "获取验证码";
+							this.dis = false;
+							this.code_tip = "获取验证码";
 						}
 					}, 1000);
 				}
@@ -84,23 +83,22 @@ export default{
 	},
 	methods: {
 		getCode: function(){
-			var _this = this;
-			if(!_this.wrong && _this.phone){
-				_this.$http.post('/inform/getCode',{phone:_this.phone}, {timeout:10000}).then((data) => {
+			if(!this.wrong && this.phone){
+				this.$http.post('/inform/getCode',{phone:this.phone}, {timeout:10000}).then((data) => {
 					console.log(data);
 				}, (err) => {
 					console.log(err);
 				});
-				_this.dis = true;
+				this.dis = true;
 				localStorage.setItem("codetime", Math.floor(new Date().getTime() / 1000));
 				var s = 60;
 				var a = setInterval(function(){
-					_this.code_tip = s + "s重新获取";
+					this.code_tip = s + "s重新获取";
 					s--;
 					if(s < 0){
 						clearInterval(a);
-						_this.dis = false;
-						_this.code_tip = "获取验证码";
+						this.dis = false;
+						this.code_tip = "获取验证码";
 					}
 				}, 1000);
 			}else{
@@ -108,13 +106,8 @@ export default{
 			}
 		},
 		sub: function(){
-			var _this = this;
-			if(!_this.wrong && /^\d{6}$/.test(_this.code) && _this.phone){
-				_this.$http.post('/inform/login', {phone: _this.phone, code:_this.code}, {timeout: 10000}).then((data) => {
-					// console.log(data);
-					// console.log(data.body.sign);
-					// console.log(data.body.friend);
-					// console.log(data.body.group);
+			if(!this.wrong && /^\d{6}$/.test(this.code) && this.phone){
+				this.$http.post('/inform/login', {phone: this.phone, code:this.code}, {timeout: 10000}).then((data) => {
 					var sign = data.body.sign;
 					if(sign == "no"){
 						alert("验证码不对！");

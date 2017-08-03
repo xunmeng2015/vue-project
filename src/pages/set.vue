@@ -4,10 +4,10 @@
 		<div class="page">
 		<ul>
 				<router-link :to="{name: 'inform', params:{sign: this.$route.params.sign }}"><li>新建通知<i class="right"></i></li></router-link>
-				<li>查看记录<i class="right"></i></li>
-				<router-link to='/adduser'><li>添加好友<i class="right"></i></li></router-link>
-				<router-link to='/addgroup'><li>新建分组<i class="right"></i></li></router-link>
-				<li v-on:click="logout">退出系统</li>
+				<router-link :to="{name:'adduser', params:{sign: this.$route.params.sign}}"><li>添加联系人<i class="right"></i></li></router-link>
+				<router-link :to="{name:'addgroup', params:{sign: this.$route.params.sign}}"><li>添加分组<i class="right"></i></li></router-link>
+				<li>更多功能</li>
+				<li>敬请期待</li>
 			</ul>
 		</div>
 		<keep-alive>
@@ -53,7 +53,6 @@
 				_this.seen = !_this.seen;
 			},
 			logout: function(){
-				localStorage.removeItem("logintime");
 				this.$router.push({name: 'login'});
 			}
 		}

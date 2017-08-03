@@ -2,11 +2,11 @@
 	<div>
 		<div class="container">
 		<input type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索记录" />
-		<div class="box">
+		<router-link :to="{name: 'about', params:{sign: this.$route.params.sign }}"><div class="box">
 			<i class="right"></i>
 			<p class="title">欢迎使用小信使</p>
 			<p class="content">点击了解详情</p>
-		</div>
+		</div></router-link>
 		<p style="font-size:12px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">历史通知</p>
 		<ul>
 				<router-link :to="{name: 'inform', params:{sign: this.$route.params.sign }}"><li><!-- <span>***</span> -->新建通知<i class="right"></i></li></router-link>

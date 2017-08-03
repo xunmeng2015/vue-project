@@ -52,14 +52,6 @@ import foot from '../components/foot'
 			}
 		},
 		methods:{
-			// blur:function(){
-			// 	var _this = this;
-			// 	if(!/1\d{10}/.test(_this.phone)){
-			// 		_this.wrong = true;
-			// 	}else{
-			// 		_this.wrong = false;
-			// 	}
-			// },
 			add: function(){			//添加好友
 				// var _this = this;
 				if(!this.wrong && this.name && this.phone && !this.special){
@@ -76,6 +68,7 @@ import foot from '../components/foot'
 									alert("该号码已存在!");
 								}else{
 									alert("添加成功");
+									this.$router.push({name:'group', params:{sign:this.$route.params.sign}});
 								// 	this.$store.state.user_list.push({
 								// 	name:this.name,
 								// 	phone:this.phone
