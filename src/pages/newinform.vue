@@ -10,7 +10,7 @@
 				<input type="text" id="title" v-model="title">
 			</div>
 			<div class="box">
-				<p class="title">活动时间<span class="warn">(格式:yyyy-MM-dd hh:mm)</span><span class="necessary">*</span><span v-if="wrong">格式出错!!</span></p>
+				<p class="title">活动时间<span class="warn">(格式:yyyy-MM-dd hh:mm)</span><span class="necessary">*</span><span v-text="nonumber" v-if="wrong" class="wrong"></span></p>
 				<input type="text" id="time" placeholder="如：2017-07-01 17:59" v-model="time" @blur="blur">
 			</div>
 			<div class="box add_area">
@@ -21,17 +21,21 @@
 			</div>
 			<div class="userList" v-if="show">
 					<ul>
-						<li v-for="(item, index) in items">{{item.phone}}<span v-on:click="remove(index)" class="remove">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
+						<li v-for="(group, index) in groups"><span class="name">{{group.name}}</span>{{group.phone}}<span v-on:click="remove('groups', index)" class="remove">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
+						<li v-for="(list, index) in fromlist"><span class="name">{{list.name}}</span>{{list.phone}}<span v-on:click="remove('fromlist', index)" class="remove">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
+						<li v-for="(item, index) in items"><span class="name">{{item.name}}</span>{{item.phone}}<span v-on:click="remove('items', index)" class="remove">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
 					</ul>
 				</div>
 			<div class="select_box">
-				<p><input type="checkbox" name="time" id="oneDay" value="oneDay" v-model="selected"><label for="oneDay" class="timetip">提前一天通知</label></p>
-				<p><input type="checkbox" name="time" id="threeHour" value="threeHour" v-model="selected"><label for="threeHour" class="timetip">提前三小时通知</label></p>
-				<p><input type="checkbox" name="time" id="oneHour" value="oneHour" v-model="selected"><label for="oneHour" class="timetip">提前一小时通知</label></p>
+				<p><input type="checkbox" name="time" id="oneDay" value="86400" v-model="selected"><label for="oneDay" class="timetip">提前一天通知</label></p>
+				<p><input type="checkbox" name="time" id="threeHour" value="10800" v-model="selected"><label for="threeHour" class="timetip">提前三小时通知</label></p>
+				<p><input type="checkbox" name="time" id="oneHour" value="3600" v-model="selected"><label for="oneHour" class="timetip">提前一小时通知</label></p>
 				<button v-on:click="sub" class="sub_btn">提交</button>
 			</div>
 		</div>
-		<chooselist :showlist="showlist" v-on:hide="hide"></chooselist>
+		<keep-alive>
+			<chooselist :showlist="showlist" v-on:hide="hide" :showgroup="showgroup" v-on:concat="fromchild"></chooselist>
+		</keep-alive>
 		<keep-alive>
 			<foot></foot>
 		</keep-alive>
@@ -66,7 +70,12 @@ Vue.filter('phoneType', function(value){
 				wrong:false,
 				showlist:false,
 				special: false,
-				special1:false
+				special1:false,
+				showgroup:true,
+				groupselect: "",
+				groups: [],
+				fromlist: [],
+				nonumber: ""
 			}
 		},
 		components: {
@@ -112,48 +121,88 @@ Vue.filter('phoneType', function(value){
 		},
 		methods: {
 			add: function(){
-				var _this = this;
-				if(!/^1\d{10}$/.test(_this.addPhone)){
+				if(!/^1\d{10}$/.test(this.addPhone)){
 					alert("请输入正确的号码");
 				}else{
-					_this.items.push({phone: _this.addPhone, name:"华华"});
-					_this.show = true;
+					this.items.push({phone: this.addPhone, name:this.addPhone});
+					this.show = true;
 				}
-				_this.addPhone = "";
+				this.addPhone = "";
 			},
-			remove: function(idx){
-				var _this = this;
-				_this.items.splice(idx, 1);
-				if(_this.items.length == 0){
-					_this.show = false;
+			remove: function(name, idx){
+				if(name == "groups"){
+					this.groups.splice(idx, 1);
+				}else if(name == "fromlist"){
+					this.fromlist.splice(idx, 1);
+				}else{
+					this.items.splice(idx, 1);
+				}
+				if(this.items.length == 0 && this.groups.length == 0 && this.fromlist.length == 0){
+					this.show = false;
 				}
 			},
 			sub: function(){
-				var _this = this;
-				_this.items.map(function(item, index){
-					console.log(item["name"] + " " + item["phone"]);
-				});
-				_this.selected.map(function(i){
-					console.log(i);
-				});
+				if(!this.wrong && !this.special1 && !this.special && this.title && this.time && this.selected.length == 0){
+					this.$http.post('/inform/setinform', {
+					name: this.name,
+					title: this.title,
+					acttime: this.time,
+					actdate: Math.floor(new Date(this.time) / 1000),
+					fromsign: this.$route.params.sign,
+					groupsign: this.groupselect,
+					people: this.items.concat(this.fromlist),
+					time: this.selected
+					}).then((data) => {
+						console.log(data);
+					}, (err) => {
+						console.log(err);
+					});
+				}else{
+					alert("信息不完整!");
+					console.log(this.$store.state.sign);
+					console.log(this.$store.state);
+				}
+				// console.log(this.selected);
 			},
 			blur: function(){
-				var _this = this;
-				if(!/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(_this.time)){
+				if(!/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(this.time)){
 					// console.log("wrong");
-					_this.wrong = true;
-					_this.time = "";
+					this.wrong = true;
+					// this.time = "";
+					this.nonumber = "格式出错!!";
 				}else{
-					_this.wrong = false;
+					if((new Date(this.time).getTime().toString().indexOf("NaN")) > -1){
+						this.nonumber = "时间不对!!";
+						this.wrong = true;
+					}else if((Math.floor(new Date(this.time) / 1000) - Math.floor(new Date() / 1000)) < 3600){
+						this.nonumber = "至少提前一小时噢!";
+						this.wrong = true;
+					}else{
+					this.wrong = false;
+					}
 				}
 			},
 			chooselist: function(){
-				var _this = this;
-				_this.showlist = true;
+				this.showlist = true;
 			},
 			hide: function(){
-				var _this = this;
-				_this.showlist = false;
+				this.showlist = false;
+			},
+			fromchild: function(userc, groupc){
+				console.log(groupc);
+				if(groupc.name){
+					this.groups = [].concat({
+						name: groupc.name + "(分组)",
+						phone: groupc.name + "(分组)"
+					});
+					this.show = true;
+					this.groupselect = groupc.groupsign;
+					console.log(this.groupselect);
+				}
+				if(userc.length > 0){
+					this.fromlist = userc;
+					this.show = true;
+				}
 			}
 		}
 	}

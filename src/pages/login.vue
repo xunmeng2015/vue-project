@@ -111,13 +111,20 @@ export default{
 			var _this = this;
 			if(!_this.wrong && /^\d{6}$/.test(_this.code) && _this.phone){
 				_this.$http.post('/inform/login', {phone: _this.phone, code:_this.code}, {timeout: 10000}).then((data) => {
-					console.log(data.body.result);
-					var sign = data.body.result;
+					// console.log(data);
+					// console.log(data.body.sign);
+					// console.log(data.body.friend);
+					// console.log(data.body.group);
+					var sign = data.body.sign;
 					if(sign == "no"){
 						alert("验证码不对！");
 					}else{
-						this.$store.commit('savesign', sign);
-						this.$router.push({name:'first', params:{sign:sign}});
+						this.$store.commit('setuser', data.body.friend);
+						this.$store.commit('setgroup', data.body.group);
+						this.$store.commit('savesign', data.body.sign);
+						this.$router.push({name:'first', params:{sign:data.body.sign}});
+						console.log(this.$store.state.user_list);
+						// console.log(this.$store.)
 					}
 				}, (err) => {
 					console.log(err);

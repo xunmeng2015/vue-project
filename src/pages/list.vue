@@ -1,18 +1,16 @@
 <template>
 	<div class="list">
-	<!-- <top></top> -->
 	<input class="search" type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索号码或名字" />
 	<router-link :to="{name:'adduser', params:{sign: this.$route.params.sign}}"><span class="group">添加联系人<i class="right"></i></span></router-link><br>
 	<router-link :to="{name:'addgroup', params:{sign: this.$route.params.sign}}"><span class="group">添加分组<i class="right"></i></span></router-link><br><br>
 	<span class="group" v-on:click="fanzhuan">分组<i v-bind:class="['right', {'up': up},{'bottom': !up}]"></i></span><br>
 		<ul v-if="seen">
-				<li v-for="group in groups">{{group.name}}</li>
+				<li v-for="(group, index) in groups" v-on:click="showgroup(group.name, group.groupsign, index)">{{group.name}}</li>
 		</ul>
 		<p style="font-size:15px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">联系人</p>
 		<ul>
 			<li v-for="(item, index) in items" v-on:click="detail(index, item.name, item.phone)">{{item.name}}</li>
 		</ul>
-
 		<div class="container" v-if="show" v-on:click="hide">
 			<div v-on:click="prevent($event)">
 			<div class="show">
@@ -26,7 +24,7 @@
 			<button style="width:250px;background-color:white;border:solid 1px white;margin-top:5px;" v-on:click="sub">确定</button>
 			</div>
 		</div>
-
+		<member :showmember="showmember" :currgroup="currgroup" :currsign="currsign" :currname="currname" :curridx="curridx" v-on:hidemember="hidemember"></member>
 		<keep-alive>
 			<foot></foot>
 		</keep-alive>
@@ -35,7 +33,7 @@
 
 <script>
 	import foot from '../components/foot'
-	import top from '../components/top'
+	import member from '../components/member'
 	export default{
 		data(){
 			return {
@@ -43,6 +41,11 @@
 				input: {
 					width: window.innerWidth - 25 + "px",
 				},
+				showmember: false,
+				currgroup: [],		//当前列表的成员
+				currsign: "",
+				curridx: "",
+				currname: "",
 				up: true,
 				seen: false,
 				groups:this.$store.state.group_list,
@@ -60,7 +63,7 @@
 		},
 		components: {
 			foot,
-			top
+			member
 		},
 		beforeCreate: function(){
 			document.title = "小信使"
@@ -82,14 +85,16 @@
 				this.up = !this.up;
 				this.seen = !this.seen;
 			},
+			hidemember: function(){
+				this.showmember = false;
+			},
 			detail: function(idx, name, phone){		//点击联系人跳出函数
 				this.changename = name;
 				this.changephone = phone;
 				this.tempname = name;
 				this.tempphone = phone;
 				this.idx = idx;
-				this.show = true;
-			},
+				this.show = true;			},
 			hide: function(){			//隐藏联系人函数
 				this.show = false;
 				this.disabled = true;
@@ -110,7 +115,6 @@
 				}
 			},
 			remove:function(){				//删除联系人
-				// console.log();
 				if(confirm("确定删除吗?")){
 					this.changephone = this.tempphone;
 					this.$http.post("/inform/removeuser", {
@@ -122,23 +126,17 @@
 							this.show = false;
 							this.disabled = true;
 							this.btntext = "修改";
-							this.$store.state.user_list.splice(this.idx, 1);
+							this.$store.commit('removeuser', this.idx);
 						}else{
 							alert("删除失败");
 						}
-						console.log(data);
 					}, (err) => {
-						console.log(err);
 						alert("发生错误");
 					});
-					// this.$store.state.user_list.splice(this.idx, 1);
 				}
 			},
 			sub:function(){					//提交函数
 			if(!this.wrong && this.changephone && this.changename && !this.special){
-					console.log(this.changename);	
-					console.log(this.changephone);
-					console.log(this.idx);
 				if(this.changename != this.tempname || this.changephone != this.tempphone){
 					if(confirm("确定修改吗?")){
 						this.$http.post("/inform/updateuser", {
@@ -152,16 +150,16 @@
 								this.show = false;
 								this.disabled = true;
 								this.btntext = "修改";
-								this.$store.state.user_list[this.idx].name = this.changename;
-								this.$store.state.user_list[this.idx].phone = this.changephone;
+								this.$store.commit('updateuser',{
+									name: this.changename,
+									phone: this.changephone
+								}, this.idx);
 								alert("修改成功");
-								console.log(data);
 							}else{
 								this.show = false;
 								this.disabled = true;
 								this.btntext = "修改";
 								alert("修改失败");
-								console.log(data);
 							}
 						}, (err) => {
 								console.log(err);
@@ -170,9 +168,6 @@
 								this.btntext = "修改";
 								alert("发生错误");
 						});
-						// this.$store.state.user_list[this.idx].name = this.changename;
-						// this.$store.state.user_list[this.idx].phone = this.changephone;
-						
 					}
 				}else{
 					this.show = false;
@@ -183,8 +178,31 @@
 			}else{
 					alert("输入有误");
 				}
-				// }
 			},
+			showgroup: function(name, sign, index){
+				if(!this.$store.state.group_infor[sign]){
+					this.$http.post('/inform/getmember', {
+						sign: this.$route.params.sign,
+						groupsign: sign
+					}).then((data) => {
+						console.log(data.body.member);
+						this.showmember = true;
+						this.currsign = sign;
+						this.$set(this.$store.state.group_infor, sign, data.body.member);
+						this.currgroup = data.body.member;
+						this.curridx = index;
+						this.currname = name;
+					}, (err) => {
+
+					});
+				}else{
+					this.showmember = true;
+					this.currsign = sign;
+					this.currgroup = this.$store.state.group_infor[sign];
+					this.curridx = index;
+					this.currname = name;
+				}
+			}
 		},
 		watch:{
 			changephone:function(){
@@ -212,116 +230,6 @@
 	}
 </script>
 
-<style scoped>
-	ul{
-		width: 100%;
-		display: flex;
-		display: -webkit-flex;
-		flex-direction: column-reverse;
-		background-color: white;
-	}
+<style src="../assets/css/list.css" scoped>
 	
-	li{
-		background-color: white;
-		height: 35px;
-		line-height: 35px;
-		border-bottom: 1px solid #F7F7F7;
-		margin-left: 10px;
-		margin-right: 10px;	
-	}
-	.search{
-		margin: 10px;
-		height: 20px;
-		line-height: 20px;
-		border: none;
-		border-radius: 5px;
-		outline: none;
-		padding-left: 5px;
-		text-align: center;
-	}
-	.group{
-		width: 100%;
-		background-color: white;
-		height: 35px;
-		line-height: 35px;
-		border-bottom: 1px solid #F7F7F7;
-		padding-left: 10px;
-		display: inline-block;
-	}
-	i.right{
-		width: 10px;
-		height: 10px;
-		background-color: transparent;
-		transform: rotate(45deg);
-		float: right;
-		border-top: 3px solid green;
-		border-right: 3px solid green;
-		margin-right: 25px;
-		margin-top: 10px;
-	}
-	i.up{
-		border-top: 3px solid green;
-		border-right: 3px solid green;
-	}
-	i.bottom{
-		border-top: 3px solid transparent;
-		border-bottom: 3px solid green;
-		border-right: 3px solid green;
-	}
-	.container{
-		position: fixed;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		overflow: hidden;
-		-webkit-overflow-scrolling: touch;
-		background-color: rgba(0, 0, 0, 0.3); 
-		z-index: 9;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-	.show{
-		width: 250px;
-		height: 140px;
-		background-color: white;
-		overflow: hidden;
-		padding-top: 5px;
-	}
-	.title{
-		font-size: 15px;
-		color: green;
-		margin-bottom: 3px;
-		padding-left: 5px;
-	}
-	.container input{
-		border: none;
-		border-bottom: 1px solid black;
-		width: 100%;
-		outline: none;
-		margin-bottom: 10px;
-		padding-left: 5px;
-	}
-	.add_btn{
-		width: 100%;
-		height: 25px;
-		font-size: 16px;
-		border:1px solid #F7F7F7;
-		background-color: #F7F7F7;
-	}
-	.wrong, .special{
-		color: red;
-		font-size: 13px;
-	}
-	.remove{
-		color: blue;
-		font-size: 14px;
-		float: right;
-		margin-top: 5px;
-	}
-	:disabled{
-		background-color: #F7F7F7;
-	}
 </style>

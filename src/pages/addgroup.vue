@@ -10,13 +10,17 @@
 		</div>
 		<div class="userList" v-if="show">
 				<ul>
-					<li v-for="(item, index) in items">{{item.phone}}<span v-on:click="remove(index)" class="remove">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
+					<li v-for="(item, index) in items"><span class="name">{{item.name}}</span>{{item.phone}}<span v-on:click="remove(index)" class="remove">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;删除</span></li>
 				</ul>
 		</div>
 		<br style="clear:both">
-		<chooselist :showlist="showlist" v-on:hide="hide"></chooselist>
+		<keep-alive>
+			<chooselist :showlist="showlist" v-on:hide="hide" v-on:concat="fromlist"></chooselist>
+		</keep-alive>
 		<button v-on:click="sub" class="sub-btn">提交</button><br>
-		<foot></foot>
+		<keep-alive>
+			<foot></foot>
+		</keep-alive>
 	</div>
 </template>
 
@@ -32,7 +36,8 @@ import chooselist from '../components/chooselist'
 				show:false,
 				special:false,
 				wrong: false,
-				showlist: false
+				showlist: false,
+				isHave: {}
 			}
 		},
 		beforeCreate: function(){
@@ -71,10 +76,13 @@ import chooselist from '../components/chooselist'
 				if(!/^1\d{10}$/.test(this.addPhone)){
 					alert("请输入正确的号码");
 				}else{
-					this.items.push({phone: this.addPhone});
+					this.items.push({name: this.addPhone,
+									 phone: this.addPhone});
 					this.show = true;
 				}
 				this.addPhone = "";
+				this.wrong = false;
+				// console.log(this.items);
 			},
 			remove: function(idx){
 				// var _this = this;
@@ -85,9 +93,35 @@ import chooselist from '../components/chooselist'
 			},
 			sub: function(){
 				// var _this = this;
-				this.items.map(function(item, index){
-					console.log(item["phone"]);
+				if(!this.special && this.name){
+				// 	this.items.map(function(item, index){
+				// 	console.log(item["name"] + " " + item["phone"]);
+				// });
+				this.$http.post('/inform/addgroup', {
+					name: this.name,
+					sign: this.$route.params.sign,
+					member: this.items
+				}).then((data) => {
+					if(data.body.result == "no"){
+						alert("添加失败");
+					}else{
+						alert("添加成功");
+						this.$store.commit('addgroup', {
+							name: this.name,
+							groupsign: data.body.result			//分组标志
+						});
+						this.$set(this.$store.state.group_infor, data.body.result, this.items);
+						this.$router.push({name:'group', params:{sign:this.$route.params.sign}});
+						// console.log(this.$store.state.group_infor[data.body.result]);
+					}
+					// console.log(data);
+				}, (err) => {
+					// console.log(err);
 				});
+			}else{
+				alert("输入有误!");
+				// this.$store.state.group_list.push({this.name});
+			}
 			},
 			hide: function(){
 				// var _this = this;
@@ -97,6 +131,13 @@ import chooselist from '../components/chooselist'
 				// var _this = this;
 				this.showlist = true;
 			},
+			fromlist: function(userc){
+				if(userc.length > 0){
+					this.show = true;
+					this.items = this.items.concat(userc);
+				}
+				console.log(this.items);
+			}
 		}
 	}
 </script>
@@ -175,5 +216,13 @@ import chooselist from '../components/chooselist'
 	.wrong, .special{
 		color: red;
 		font-size: 13px;
+	}
+	.name{
+		display: inline-block;
+		width: 70px;
+		float: left;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow:ellipsis;
 	}
 </style>

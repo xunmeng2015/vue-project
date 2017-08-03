@@ -61,14 +61,14 @@ import foot from '../components/foot'
 			// 	}
 			// },
 			add: function(){			//添加好友
-				var _this = this;
-				if(!_this.wrong && _this.name && _this.phone && !_this.special){
+				// var _this = this;
+				if(!this.wrong && this.name && this.phone && !this.special){
 					if(confirm("确定添加吗")){
-						console.log(_this.name + " " + _this.phone);
+						console.log(this.name + " " + this.phone);
 						this.$http.post('/inform/adduser', 
 							{sign:this.$route.params.sign,
-							 name:_this.name,
-							 phone:_this.phone},
+							 name:this.name,
+							 phone:this.phone},
 							{timeout:10000}).then((data) => {
 								console.log(data);
 								var statu = data.body.result;
@@ -76,9 +76,13 @@ import foot from '../components/foot'
 									alert("该号码已存在!");
 								}else{
 									alert("添加成功");
-									_this.$store.state.user_list.push({
-									name:_this.name,
-									phone:_this.phone
+								// 	this.$store.state.user_list.push({
+								// 	name:this.name,
+								// 	phone:this.phone
+								// });
+								this.$store.commit('adduser', {
+									name:this.name,
+									phone:this.phone
 								});
 								}
 							})

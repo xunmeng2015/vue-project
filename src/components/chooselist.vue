@@ -1,13 +1,15 @@
 <template>
 		<div class="container" v-if="showlist" v-on:click="hide">
 			<div class="list" v-on:click="prevent($event)">
-				<p style="font-size:12px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;color:gray">分组</p>
+			<div v-if="showgroup">
+				<p style="font-size:12px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;color:gray">分组(只能选一个，重选覆盖)</p>
 				<ul>
-					<li v-for="(group, index) in groups">{{ group.name }}<input type="radio" :value="index" v-model="groupc"></li>
+					<li v-for="(group, index) in groups">{{ group.name }}<input type="radio" :value="group" v-model="groupc" :checked="checked" ></li>
 				</ul>
+			</div>
 				<p style="font-size:12px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">联系人</p>
 				<ul>
-					<li v-for="(item, idx) in items">{{ item.name }}<input type="checkbox" :value="idx" v-model="userc"></li>
+					<li v-for="(item, idx) in items">{{ item.name }}<input type="checkbox" :value="item" v-model="userc"></li>
 				</ul>
 			</div>
 			<button style="width:250px;background-color:white;border:solid 1px white;margin-top:3px;" v-on:click="sub">确定</button>
@@ -16,7 +18,7 @@
 
 <script>
 	export default{
-		props:["showlist"],
+		props:["showlist", "showgroup", "checked"],
 			data(){
 				return{
 					groups: this.$store.state.group_list,
@@ -27,13 +29,12 @@
 			},
 			methods:{
 				sub:function(){
-				var _this = this;
-					console.log(_this.groupc);
-					console.log(_this.userc);
+					console.log(this.groupc);
+					// console.log(this.userc);
+					this.$emit("concat", this.userc, this.groupc);
 				},
 				hide: function(){
-					var _this = this;	
-					_this.$emit('hide');		//调用父组件的事件
+					this.$emit('hide');		//调用父组件的事件
 				},
 				prevent: function(e){
 					e.stopPropagation();		//阻止冒泡

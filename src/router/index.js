@@ -16,7 +16,6 @@ const set = resolve => require(['../pages/set'], resolve)//设置页面
 const adduser = resolve => require(['../pages/addUser'], resolve)//添加联系人
 const addgroup = resolve => require(['../pages/addgroup'], resolve)//添加联系人
 const choose = resolve => require(['../components/chooselist'], resolve)
-const showfriend = resolve => require(['../components/showfriend'], resolve)
 
 Vue.use(Router)
 
@@ -64,10 +63,6 @@ export default new Router({
 	  {
 	  	path: '/choose',
 	  	component: choose
-	  },
-	  {
-	  	path: '/showfriend',
-	  	component: showfriend
 	  }
   ]
 })

@@ -30,7 +30,7 @@
 			foot
 		},
 		beforeCreate: function(){
-			document.title = "及事通"
+			document.title = "小信使"
 		},
 		methods:{
 			focus: function(){
