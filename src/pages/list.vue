@@ -1,9 +1,10 @@
 <template>
 	<div class="list">
+	<div style="padding-bottom:60px;">
 	<input class="search" type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索号码或名字" />
 	<router-link :to="{name:'adduser', params:{sign: this.$route.params.sign}}"><span class="group">添加联系人<i class="right"></i></span></router-link><br>
 	<router-link :to="{name:'addgroup', params:{sign: this.$route.params.sign}}"><span class="group">添加分组<i class="right"></i></span></router-link><br><br>
-	<span class="group" v-on:click="fanzhuan">分组<i v-bind:class="['right', {'up': up},{'bottom': !up}]"></i></span><br>
+	<span class="group" style="color: green;" v-on:click="fanzhuan">分组<i v-bind:class="['right', {'up': up},{'bottom': !up}]"></i></span><br>
 		<ul v-if="seen">
 				<li v-for="(group, index) in groups" v-on:click="showgroup(group.name, group.groupsign, index)">{{group.name}}</li>
 		</ul>
@@ -24,6 +25,7 @@
 			<button style="width:250px;background-color:white;border:solid 1px white;margin-top:5px;" v-on:click="sub">确定</button>
 			</div>
 		</div>
+		</div>
 		<member :showmember="showmember" :currgroup="currgroup" :currsign="currsign" :currname="currname" :curridx="curridx" v-on:hidemember="hidemember"></member>
 		<keep-alive>
 			<foot></foot>
@@ -37,7 +39,7 @@
 	export default{
 		data(){
 			return {
-				items:this.$store.state.user_list,
+				items:(this.$store.state.user_list.length > 0) ? this.$store.state.user_list : JSON.parse(sessionStorage.getItem('user_list')),
 				input: {
 					width: window.innerWidth - 25 + "px",
 				},
@@ -48,12 +50,12 @@
 				currname: "",
 				up: true,
 				seen: false,
-				groups:this.$store.state.group_list,
+				groups:(this.$store.state.group_list.length > 0) ? this.$store.state.group_list : JSON.parse(sessionStorage.getItem('group_list')),
 				show: false,			//联系人信息是否显示
 				wrong:false,			//号码格式错误显示
 				special:false,			//名字格式错误显示
 				disabled:true,			//输入框操作性
-				btntext: "修改",			//按钮文本
+				btntext: "点击修改",		//按钮文本
 				changename: "",			//输入框值
 				changephone: "",		//号码值	
 				idx: "",				//点击的index
@@ -66,7 +68,30 @@
 			member
 		},
 		beforeCreate: function(){
-			document.title = "小信使"
+			document.title = "小信使";
+		},
+		mounted: function(){
+			if(this.$store.state.user_list.length == 0){
+				this.$store.commit('setuser', !sessionStorage.getItem('user_list') ? [] : JSON.parse(sessionStorage.getItem('user_list')));
+			}
+			if(this.$store.state.user_list.length == 0){
+				this.$store.commit('setgroup', !sessionStorage.getItem('group_list') ? [] : JSON.parse(sessionStorage.getItem('group_list')));
+			}
+			if(this.$store.state.user_list.length == 0 && !sessionStorage.getItem('user_list')){
+				this.$http.post('/inform/getuserinform', {
+					sign: this.$route.params.sign
+				}).then((data) => {
+					console.log(data);
+					this.$store.commit('setuser', data.body.friend);
+					this.$store.commit('setgroup', data.body.group);
+					sessionStorage.setItem("user_list", JSON.stringify(data.body.friend));
+					sessionStorage.setItem("group_list", JSON.stringify(data.body.group));
+				}, (err) => {
+					console.log(err);
+					alert("获取用户信息失败");
+				});
+			}
+			// console.log(this.$store.state.user_list);
 		},
 		methods:{
 			focus: function(){
@@ -80,6 +105,7 @@
 					width: window.innerWidth - 25 + "px",
 					textAlign: "center"
 				}
+				alert(JSON.stringify(this.$store.state.user_list));
 			},
 			fanzhuan:function(){		//分组指引反转函数
 				this.up = !this.up;
@@ -98,7 +124,7 @@
 			hide: function(){			//隐藏联系人函数
 				this.show = false;
 				this.disabled = true;
-				this.btntext = "修改";
+				this.btntext = "点击修改";
 				this.$emit('hide');
 			},
 			prevent: function(e){			//阻止事件冒泡
@@ -107,9 +133,9 @@
 			change:function(){				//改变输入框可操作性
 				this.disabled = !this.disabled;
 				if(!this.disabled){
-					this.btntext = "取消"
+					this.btntext = "点击取消"
 				}else{
-					this.btntext = "修改"
+					this.btntext = "点击修改"
 					this.changename = this.tempname;
 					this.changephone = this.tempphone;
 				}
@@ -121,12 +147,14 @@
 						phone: this.changephone,
 						sign: this.$route.params.sign
 					}).then((data) => {
+						console.log(data);
 						if(data.body.result == "success"){
 							alert("删除成功");
 							this.show = false;
 							this.disabled = true;
-							this.btntext = "修改";
+							this.btntext = "点击修改";
 							this.$store.commit('removeuser', this.idx);
+							sessionStorage.setItem("user_list", JSON.stringify(this.$store.state.user_list));
 						}else{
 							alert("删除失败");
 						}
@@ -149,30 +177,31 @@
 							if(data.body.result == "success"){
 								this.show = false;
 								this.disabled = true;
-								this.btntext = "修改";
+								this.btntext = "点击修改";
 								this.$store.commit('updateuser',{
 									name: this.changename,
 									phone: this.changephone
 								}, this.idx);
+								sessionStorage.setItem("user_list", JSON.stringify(this.$store.state.user_list));
 								alert("修改成功");
 							}else{
 								this.show = false;
 								this.disabled = true;
-								this.btntext = "修改";
+								this.btntext = "点击修改";
 								alert("修改失败");
 							}
 						}, (err) => {
 								console.log(err);
 								this.show = false;
 								this.disabled = true;
-								this.btntext = "修改";
+								this.btntext = "点击修改";
 								alert("发生错误");
 						});
 					}
 				}else{
 					this.show = false;
 					this.disabled = true;
-					this.btntext = "修改";
+					this.btntext = "点击修改";
 					this.$emit('hide');
 				}
 			}else{

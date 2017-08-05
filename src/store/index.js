@@ -6,18 +6,12 @@ import getters from './getter'
 Vue.use(Vuex)
 
 const state = {
-	user_list:[{
-		name:"11",
-		phone: "18826103503"
-	},
-	{
-		name:"22",
-		phone: "18826103503"
-	}],
+	user_list:[],
 	group_list:[],
-	inform_history:[],
+	history:[],
 	sign: "",
-	group_infor: {}
+	group_infor: {},
+	detail: {}
 }
 
 export default new Vuex.Store({

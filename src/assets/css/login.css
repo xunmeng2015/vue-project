@@ -1,0 +1,77 @@
+
+	#login{
+		background: url('../assets/img/1.jpg');
+		background-size: 110% 100%;
+	}
+	.login_area{
+		background-color: rgba(255, 255, 255, 0.7);
+		display: -webkit-box; /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+	    display: -moz-box; /* 老版本语法: Firefox (buggy) */
+	    display: -ms-flexbox; /* 混合版本语法: IE 10 */
+	    display: -webkit-flex; /* 新版本语法: Chrome 21+ */
+	    display: flex; /* 新版本语法: Opera 12.1, Firefox 22+ */
+		-webkit-box-align: center;
+	    -moz-align-items: center;
+	    -webkit-align-items: center;
+	    align-items: center;
+		-webkit-box-pack: center;
+	    -moz-justify-content: center;
+	    -webkit-justify-content: center;
+	    justify-content: center;
+	}
+	.item{		/*flex单元*/
+		margin-bottom: 15px;
+		width: 200px;
+	}
+	.area{		/*区号*/
+		background: #EAEAEA;
+		height: 32px;
+		border: 1px solid #E0E0E0;
+		border-top-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		width: 35px;
+		float: left;
+		line-height: 32px;
+	}
+	input{		/*输入框*/
+		height: 30px;
+		border: 1px solid #E0E0E0;
+	}
+	#code{		/*验证码输入框*/
+		/*border-left: none;*/
+		border-bottom-left-radius: 10px;
+		border-top-left-radius: 10px;
+		outline: none;
+		width:100px;
+	}
+	#phone{		/*手机号码输入框*/
+		/*border-right: none;*/
+		border-top-right-radius: 10px;
+		border-bottom-right-radius: 10px;
+		width: 158px;
+		outline: none;
+	}
+	#get_code{	/*获取验证码按钮*/
+		/*border-left-style: none;*/
+		 width:95px;
+		 height: 34px;
+		 border-top-right-radius: 10px;
+		 border-bottom-right-radius: 10px;
+		 border: none;
+		 background-color: #EAEAEA;
+	}
+	.warn{		/*格式警告*/
+		width: 200px;
+		text-align: center;
+		color: red;
+	}
+	#sub{		/*提交按钮*/
+		height: 34px;
+		width: 200px;
+		border-radius: 10px;
+		border: none;
+		background-color: #EAEAEA;
+	}
+	#sub:hover{
+		background-color: white;
+	}

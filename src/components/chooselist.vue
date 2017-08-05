@@ -21,8 +21,8 @@
 		props:["showlist", "showgroup", "checked"],
 			data(){
 				return{
-					groups: this.$store.state.group_list,
-					items: this.$store.state.user_list,
+					groups: (this.$store.state.group_list > 0) ? this.$store.state.group_list : JSON.parse(sessionStorage.getItem('group_list')),
+					items: (this.$store.state.user_list > 0) ? this.$store.state.user_list : JSON.parse(sessionStorage.getItem('user_list')),
 					groupc:[],
 					userc:[]
 				}
@@ -76,5 +76,9 @@
 	input{
 		float: right;
 		margin-top: 12px;
+	}
+	button{
+		height: 25px;
+		font-size: 16px;
 	}
 </style>

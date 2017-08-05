@@ -29,6 +29,7 @@ export default{
 	padding: 5px;
 	font-family: "正楷";
 	line-height: 20px;
+	margin-bottom:50px;
 }
 h1{
 	margin-bottom: 10px;

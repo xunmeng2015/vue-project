@@ -1,9 +1,9 @@
 <template>
   <div class="footer">
     <ul>
-      <router-link :to="{name:'first', params:{sign: this.$route.params.sign}}"><li><span :class="[main_icon, {main: main}]"></span><span>主页</span></li></router-link>
-      <router-link :to="{name:'group', params:{sign: this.$route.params.sign}}"><li><span :class="[list_icon, {list: list}]"></span><span>通讯录</span></li></router-link>
-      <router-link :to="{name:'set', params:{sign: this.$route.params.sign}}"><li><span :class="[set_icon, {set: set}]"></span><span>设置</span></li></router-link>
+      <router-link :to="{name:'first', params:{sign: this.$route.params.sign}}"><li><span :class="[main_icon, {main: main}]"></span><br><span>主页</span></li></router-link>
+      <router-link :to="{name:'group', params:{sign: this.$route.params.sign}}"><li><span :class="[list_icon, {list: list}]"></span><br><span>通讯录</span></li></router-link>
+      <router-link :to="{name:'set', params:{sign: this.$route.params.sign}}"><li><span :class="[set_icon, {set: set}]"></span><br><span>设置</span></li></router-link>
     </ul>
   </ul>
   </div>
@@ -50,19 +50,18 @@ a{
   bottom: 0;
 }
 ul{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  background-color: #FCFCFC;
+-moz-column-count:3;  /* Firefox */
+-webkit-column-count:3; /* Safari 和 Chrome */
+column-count:3;
+background-color: #FCFCFC;
+border-top: 1px solid lightgray;
+/*height: 50px;*/
 }
 li{
-  display: flex;
-  height: 50px;
-  line-height: 15px;
-  flex-direction: column;
-  flex-shrink: 1;
-  justify-content: space-around;
-  align-items: center;
+  text-align: center;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  font-size: 15px;
 }
 a{
   color: black;
@@ -76,7 +75,6 @@ a:visited{
   width: 26px;
   height: 30px;
   margin-top: -2px;
-  margin-bottom: -5px;
   background-size: 26px 29px;
   background-position: 0px 1px;
 }
@@ -84,19 +82,17 @@ a:visited{
   display: inline-block;
   background: url('../assets/img/list.png');
   width: 30px;
-  height: 28px;
-  margin-top: -2px;
-  margin-bottom: -5px;
-  background-size: 29px 28px;
+  height: 30px;
+  margin-top: 1px;
+  background-size: 30px 30px;
 }
 .set_icon{
   display: inline-block;
   background: url('../assets/img/set.png');
   width: 30px;
   height: 30px;
-  margin-top: -3px;
-  margin-bottom: -5px;
-  background-size:33px 33px;
+  margin-top: -2px;
+  background-size:35px 35px;
 }
 .main{
   background: url('../assets/img/main1.png');
@@ -105,10 +101,10 @@ a:visited{
 }
 .list{
  background: url('../assets/img/list1.png');
- background-size: 29px 28px;
+ background-size: 30px 30px;
 }
 .set{
  background: url('../assets/img/set1.png');
- background-size:33px 33px;
+ background-size:35px 35px;
 }
 </style>

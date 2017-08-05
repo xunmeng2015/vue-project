@@ -1,0 +1,97 @@
+body{
+  height: 100%;
+  width: 100%;
+}
+a{
+  text-decoration: none;
+}
+.footer{
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+ul{
+  display: -webkit-box; /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+    display: -moz-box; /* 老版本语法: Firefox (buggy) */
+    display: -ms-flexbox; /* 混合版本语法: IE 10 */
+    display: -webkit-flex; /* 新版本语法: Chrome 21+ */
+    display: flex; /* 新版本语法: Opera 12.1, Firefox 22+ */
+  /*display:-webkit-box;*/
+  -webkit-box-direction: row;
+    -webkit-box-orient: row;
+    -moz-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: space-around;
+    -moz-justify-content: space-around;
+    -webkit-justify-content: space-around;
+  justify-content: space-around;
+  background-color: #FCFCFC;
+}
+li{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  /*display:-webkit-box;*/
+  height: 50px;
+  line-height: 15px;
+  -webkit-flex-direction: column;
+  -webkit-flex-shrink: 1;
+  -webkit-justify-content: space-around;
+  -webkit-align-items: center;
+  flex-direction: column;
+  flex-shrink: 1;
+  justify-content: space-around;
+  align-items: center;
+}
+a{
+  color: black;
+}
+a:visited{
+  color: transparent;
+}
+.main_icon{
+  display: inline-block;
+  background: url('../assets/img/main.png');
+  width: 26px;
+  height: 30px;
+  margin-top: -2px;
+  margin-bottom: -5px;
+  background-size: 26px 29px;
+  background-position: 0px 1px;
+}
+.list_icon{
+  display: inline-block;
+  background: url('../assets/img/list.png');
+  width: 30px;
+  height: 28px;
+  margin-top: -2px;
+  margin-bottom: -5px;
+  background-size: 29px 28px;
+}
+.set_icon{
+  display: inline-block;
+  background: url('../assets/img/set.png');
+  width: 30px;
+  height: 30px;
+  margin-top: -3px;
+  margin-bottom: -5px;
+  background-size:33px 33px;
+}
+.main{
+  background: url('../assets/img/main1.png');
+  background-size: 26px 29px;
+  background-position: 0px 1px;
+}
+.list{
+ background: url('../assets/img/list1.png');
+ background-size: 29px 28px;
+}
+.set{
+ background: url('../assets/img/set1.png');
+ background-size:33px 33px;
+}

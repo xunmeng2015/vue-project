@@ -29,5 +29,11 @@ export default{
 	},
 	setgroup(state, obj){
 		state.group_list = obj;
+	},
+	setinform(state, obj){
+		state.history = obj;
+	},
+	addinform(state, obj){
+		state.history.push(obj);
 	}
 }

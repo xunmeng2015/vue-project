@@ -21,6 +21,9 @@
 		float: right;
 		margin-right: 10px;
 	}
+	.input_area{
+		margin-bottom: 60px;
+	}
 	.box{
 		height: 40px;
 		background-color: white;
@@ -39,7 +42,7 @@
 	.box input{
 		border: none;
 		border-bottom: 1px solid black;
-		width: 100%;
+		width: 99%;
 		outline: none;
 	}
 	.warn{
@@ -67,7 +70,7 @@
 	}
 	.add_area{
 		position: relative;
-		height: 95px;
+		height: 100px;
 		z-index: 2;
 	}
 	.add_btn{
@@ -96,6 +99,7 @@
 		font-size: 14px;
 		float: right;
 		margin-top: 10px;
+		/*margin-bottom: */
 	}
 	.name{
 		display: inline-block;

@@ -142,7 +142,7 @@ Vue.filter('phoneType', function(value){
 				}
 			},
 			sub: function(){
-				if(!this.wrong && !this.special1 && !this.special && this.title && this.time && this.selected.length == 0){
+				if(!this.wrong && !this.special1 && !this.special && this.title && this.time && this.selected.length > 0){
 					this.$http.post('/inform/setinform', {
 					name: this.name,
 					title: this.title,
@@ -154,7 +154,18 @@ Vue.filter('phoneType', function(value){
 					time: this.selected
 					}).then((data) => {
 						console.log(data);
+						this.$set(this.$store.state.detail, data.body.informsign, {
+							title: this.title,
+							acttime: this.time
+						});
+						this.$store.commit('addinform', {
+							title: this.title,
+							acttime: this.time
+							// informsign: data.body.informsign
+						});
+						this.$router.push({name:'first', params:{sign:this.$route.params.sign}});
 					}, (err) => {
+						alert("发生错误");
 						console.log(err);
 					});
 				}else{
@@ -175,7 +186,7 @@ Vue.filter('phoneType', function(value){
 						this.nonumber = "时间不对!!";
 						this.wrong = true;
 					}else if((Math.floor(new Date(this.time) / 1000) - Math.floor(new Date() / 1000)) < 3600){
-						this.nonumber = "至少提前一小时噢!";
+						this.nonumber = "提前一小时!";
 						this.wrong = true;
 					}else{
 					this.wrong = false;

@@ -83,22 +83,23 @@ export default{
 	},
 	methods: {
 		getCode: function(){
-			if(!this.wrong && this.phone){
+			var _this = this;
+			if(!_this.wrong && _this.phone){
 				this.$http.post('/inform/getCode',{phone:this.phone}, {timeout:10000}).then((data) => {
 					console.log(data);
 				}, (err) => {
 					console.log(err);
 				});
-				this.dis = true;
+				_this.dis = true;
 				localStorage.setItem("codetime", Math.floor(new Date().getTime() / 1000));
 				var s = 60;
 				var a = setInterval(function(){
-					this.code_tip = s + "s重新获取";
+					_this.code_tip = s + "s重新获取";
 					s--;
 					if(s < 0){
 						clearInterval(a);
-						this.dis = false;
-						this.code_tip = "获取验证码";
+						_this.dis = false;
+						_this.code_tip = "获取验证码";
 					}
 				}, 1000);
 			}else{
@@ -112,11 +113,15 @@ export default{
 					if(sign == "no"){
 						alert("验证码不对！");
 					}else{
-						this.$store.commit('setuser', data.body.friend);
-						this.$store.commit('setgroup', data.body.group);
+						console.log(data)
+						// this.$store.commit('setuser', data.body.friend);
+						// this.$store.commit('setgroup', data.body.group);
 						this.$store.commit('savesign', data.body.sign);
+						this.$store.commit('setinform', data.body.history);
+						sessionStorage.setItem("history", JSON.stringify(data.body.history));
+						// sessionStorage.setItem("user_list", JSON.stringify(data.body.friend));
+						// sessionStorage.setItem("group_list", JSON.stringify(data.body.group));
 						this.$router.push({name:'first', params:{sign:data.body.sign}});
-						console.log(this.$store.state.user_list);
 						// console.log(this.$store.)
 					}
 				}, (err) => {
@@ -137,14 +142,22 @@ export default{
 	}
 	.login_area{
 		background-color: rgba(255, 255, 255, 0.7);
-		display: flex;
-		display: -webkit-flex;
-		align-items: center;
-		justify-content: center;
+		display: -webkit-box; 
+	    display: -ms-flexbox; 
+	    display: -webkit-flex; 
+	    display: flex; 
+		-webkit-box-align: center;
+	    -moz-align-items: center;
+	    -webkit-align-items: center;
+	    align-items: center;
+		-webkit-box-pack: center;
+	    -moz-justify-content: center;
+	    -webkit-justify-content: center;
+	    justify-content: center;
 	}
 	.item{		/*flex单元*/
 		margin-bottom: 15px;
-		width: 200px;
+		width: 210px;
 	}
 	.area{		/*区号*/
 		background: #EAEAEA;
@@ -190,7 +203,7 @@ export default{
 	}
 	#sub{		/*提交按钮*/
 		height: 34px;
-		width: 200px;
+		width: 210px;
 		border-radius: 10px;
 		border: none;
 		background-color: #EAEAEA;

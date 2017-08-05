@@ -3,7 +3,8 @@
 			<div class="show" v-on:click="prevent($event)">
 				<div class="list">
 					<ul>
-						<li v-for="(item, index) in currgroup"><span class="title">{{ item.name }}</span>{{ item.phone }}<button v-on:click="remove(item.name, item.phone, index)">删除</button></li>
+						<li v-for="(item, index) in currgroup"><i class="title">{{ item.name }}</i>
+						<span class="userp">{{ item.phone }}</span><button class="delete" v-on:click="remove(item.name, item.phone, index)">删除</button></li>
 					</ul>
 				</div>
 				<div class="bottom">
@@ -93,6 +94,7 @@
 						}).then((data) => {
 							if(data.body.result == "success"){
 								this.$store.commit('removegroup', this.curridx);
+								sessionStorage.setItem("user_list", JSON.stringify(this.$store.state.group_list));
 								this.$emit('hidemember');
 							}else{
 								alert("删除失败");
@@ -143,9 +145,9 @@
 		position: relative;
 	}
 	li{
-		display: flex;
+		/*display: flex;
 		flex-direction: row;
-		justify-content: space-between;
+		justify-content: space-between;*/
 		height: 27px;
 		line-height: 27px;
 		margin-bottom: 5px;
@@ -170,7 +172,9 @@
 		width: 60px;
 		overflow: hidden;
 		white-space: nowrap;
+		/*-webkit-text-overflow: ellipsis;*/
 		text-overflow: ellipsis;
+		display: inline-block;
 	}
 	input{
 		border: none;
@@ -181,10 +185,12 @@
 		margin-top: 5px;
 	}
 	.name{
-		width: 70px;
+		width: 60px;
+		font-size: 12px;
 	}
 	.phone{
-		width: 115px;
+		width: 105px;
+		font-size: 12px;
 	}
 	.remove{
 		height: 25px;
@@ -192,4 +198,14 @@
 		width: 100%;
 		/*border:1px solid ;*/
 	}
+	.userp{
+		overflow: hidden;
+		display: inline-block;
+		/*clear: both;*/
+		text-align: center;
+	}
+	.delete{
+		/*display: inline-block;*/
+		float: right;
+		}
 </style>

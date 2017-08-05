@@ -46,8 +46,8 @@ import foot from '../components/foot'
 				}else{
 					this.special = false;
 				}
-				if(this.name.length > 20){
-					this.name = this.name.substr(0, 20);
+				if(this.name.length > 15){
+					this.name = this.name.substr(0, 15);
 				}
 			}
 		},
@@ -69,14 +69,16 @@ import foot from '../components/foot'
 								}else{
 									alert("添加成功");
 									this.$router.push({name:'group', params:{sign:this.$route.params.sign}});
-								// 	this.$store.state.user_list.push({
-								// 	name:this.name,
-								// 	phone:this.phone
-								// });
+									var uu = JSON.parse(sessionStorage.getItem("user_list")).concat({
+									name:this.name,
+									phone:this.phone
+								});
+								sessionStorage.setItem("user_list", JSON.stringify(uu));
 								this.$store.commit('adduser', {
 									name:this.name,
 									phone:this.phone
 								});
+								this.$router.push({name:'group', params:{sign:this.$route.params.sign}});
 								}
 							})
 					}else{return;}
@@ -108,7 +110,7 @@ import foot from '../components/foot'
 	.box input{
 		border: none;
 		border-bottom: 1px solid black;
-		width: 100%;
+		width: 99%;
 		outline: none;
 		margin-bottom: 10px;
 	}

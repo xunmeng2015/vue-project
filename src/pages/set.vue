@@ -6,8 +6,8 @@
 				<router-link :to="{name: 'inform', params:{sign: this.$route.params.sign }}"><li>新建通知<i class="right"></i></li></router-link>
 				<router-link :to="{name:'adduser', params:{sign: this.$route.params.sign}}"><li>添加联系人<i class="right"></i></li></router-link>
 				<router-link :to="{name:'addgroup', params:{sign: this.$route.params.sign}}"><li>添加分组<i class="right"></i></li></router-link>
-				<li>更多功能</li>
-				<li>敬请期待</li>
+				<li v-on:click="demo">更多功能</li>
+				<li v-on:click="show">敬请期待</li>
 			</ul>
 		</div>
 		<keep-alive>
@@ -52,8 +52,11 @@
 				_this.up = !_this.up;
 				_this.seen = !_this.seen;
 			},
-			logout: function(){
-				this.$router.push({name: 'login'});
+			demo: function(){
+				sessionStorage.setItem("aa", [1,2,3]);
+			},
+			show: function(){
+				console.log(sessionStorage.getItem("aa"));
 			}
 		}
 	}

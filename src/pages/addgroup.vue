@@ -4,7 +4,7 @@
 			<p class="title">分组名称<span class="necessary">*</span><span v-if="special" class="wrong">   昵称不能包含<>.*+-/"'!</span></p>
 			<input type="text" id="name" v-model="name">
 				<p class="title">添加对象<span v-if="wrong" class="wrong">格式出错!!</span></p>
-				<input type="text" id="time" v-model="addPhone" placeholder="请输入手机号码">
+				<input type="number" id="time" v-model="addPhone" placeholder="请输入手机号码"> <!--</textarea>type="text" id="time" v-model="addPhone" placeholder="请输入手机号码"> -->
 				<span class="list" v-on:click="chooselist">从通讯录选择</span>
 				<button class="add_btn" v-on:click="add">添加</button>
 		</div>
@@ -111,6 +111,11 @@ import chooselist from '../components/chooselist'
 							groupsign: data.body.result			//分组标志
 						});
 						this.$set(this.$store.state.group_infor, data.body.result, this.items);
+						var gg = JSON.parse(sessionStorage.getItem("group_list")).concat({
+							name: this.name,
+							groupsign: data.body.result			//分组标志
+						});
+						sessionStorage.setItem("group_list", JSON.stringify(gg));
 						this.$router.push({name:'group', params:{sign:this.$route.params.sign}});
 						// console.log(this.$store.state.group_infor[data.body.result]);
 					}
@@ -163,12 +168,16 @@ import chooselist from '../components/chooselist'
 		color: green;
 		margin-bottom: 3px;
 	}
-	.box input{
+	.box input, .box textarea{
 		border: none;
 		border-bottom: 1px solid black;
-		width: 100%;
+		width: 99%;
 		outline: none;
 		margin-bottom: 10px;
+		height: 20px;
+		resize: none;
+		font-family: transparent;
+		line-height: 20px;
 	}
 	.add_btn{
 		width: 100%;
