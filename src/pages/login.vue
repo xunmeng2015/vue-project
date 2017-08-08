@@ -43,17 +43,18 @@ export default{
 		document.title = "小信使 登录";
 	},
 	mounted: function(){
+		var _this = this;
 				if(localStorage.getItem("codetime") != null){
 				var sub = 60 - (Math.floor(new Date().getTime() / 1000) - localStorage.getItem("codetime"));
 				if(sub > 0){
 					this.dis = true;
 					var a = setInterval(function(){
-						this.code_tip = sub + "s重新获取";
+						_this.code_tip = sub + "s重新获取";
 						sub--;
 						if(sub < 0){
 							clearInterval(a);
 							this.dis = false;
-							this.code_tip = "获取验证码";
+							_this.code_tip = "获取验证码";
 						}
 					}, 1000);
 				}

@@ -18,6 +18,10 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 	color: black;
+	/*-webkit-user-select: none;*/
+	-webkit-tap-highlight-color: rgba(200,200,200,0);
+	/*user-select: none;*/
+	tap-highlight-color:rgba(200, 200, 200, 0);
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
