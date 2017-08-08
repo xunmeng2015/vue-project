@@ -81,17 +81,14 @@
 				this.$http.post('/inform/getuserinform', {
 					sign: this.$route.params.sign
 				}).then((data) => {
-					console.log(data);
 					this.$store.commit('setuser', data.body.friend);
 					this.$store.commit('setgroup', data.body.group);
 					sessionStorage.setItem("user_list", JSON.stringify(data.body.friend));
 					sessionStorage.setItem("group_list", JSON.stringify(data.body.group));
 				}, (err) => {
-					console.log(err);
 					alert("获取用户信息失败");
 				});
 			}
-			// console.log(this.$store.state.user_list);
 		},
 		methods:{
 			focus: function(){
@@ -105,7 +102,6 @@
 					width: window.innerWidth - 25 + "px",
 					textAlign: "center"
 				}
-				alert(JSON.stringify(this.$store.state.user_list));
 			},
 			fanzhuan:function(){		//分组指引反转函数
 				this.up = !this.up;
@@ -214,7 +210,6 @@
 						sign: this.$route.params.sign,
 						groupsign: sign
 					}).then((data) => {
-						console.log(data.body.member);
 						this.showmember = true;
 						this.currsign = sign;
 						this.$set(this.$store.state.group_infor, sign, data.body.member);
@@ -246,7 +241,6 @@
 			},
 			changename:function(){
 				if(/[<>.*+-/"']/g.test(this.changename)){
-					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
 					this.special = true;
 				}else{
 					this.special = false;

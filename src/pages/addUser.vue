@@ -41,7 +41,6 @@ import foot from '../components/foot'
 			},
 			name:function(){
 				if(/[<>.*+-/"']/g.test(this.name)){
-					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);
 					this.special = true;
 				}else{
 					this.special = false;
@@ -53,7 +52,6 @@ import foot from '../components/foot'
 		},
 		methods:{
 			add: function(){			//添加好友
-				// var _this = this;
 				if(!this.wrong && this.name && this.phone && !this.special){
 					if(confirm("确定添加吗")){
 						console.log(this.name + " " + this.phone);
@@ -80,6 +78,8 @@ import foot from '../components/foot'
 								});
 								this.$router.push({name:'group', params:{sign:this.$route.params.sign}});
 								}
+							}, (err) => {
+								alert("发生错误!");
 							})
 					}else{return;}
 				}

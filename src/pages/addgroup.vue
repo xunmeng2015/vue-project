@@ -4,7 +4,7 @@
 			<p class="title">分组名称<span class="necessary">*</span><span v-if="special" class="wrong">   昵称不能包含<>.*+-/"'!</span></p>
 			<input type="text" id="name" v-model="name">
 				<p class="title">添加对象<span v-if="wrong" class="wrong">格式出错!!</span></p>
-				<input type="number" id="time" v-model="addPhone" placeholder="请输入手机号码"> <!--</textarea>type="text" id="time" v-model="addPhone" placeholder="请输入手机号码"> -->
+				<input type="number" id="time" v-model="addPhone" placeholder="请输入手机号码">
 				<span class="list" v-on:click="chooselist">从通讯录选择</span>
 				<button class="add_btn" v-on:click="add">添加</button>
 		</div>
@@ -63,7 +63,6 @@ import chooselist from '../components/chooselist'
 					this.name = this.name.substr(0, 15);
 				}
 				if(/[<>.*+-/"'!]/g.test(this.name)){
-					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
 					this.special = true;
 				}else{
 					this.special = false;
@@ -72,7 +71,6 @@ import chooselist from '../components/chooselist'
 		},
 		methods:{
 			add: function(){
-				// var _this = this;
 				if(!/^1\d{10}$/.test(this.addPhone)){
 					alert("请输入正确的号码");
 				}else{
@@ -82,21 +80,15 @@ import chooselist from '../components/chooselist'
 				}
 				this.addPhone = "";
 				this.wrong = false;
-				// console.log(this.items);
 			},
 			remove: function(idx){
-				// var _this = this;
 				this.items.splice(idx, 1);
 				if(this.items.length == 0){
 					this.show = false;
 				}
 			},
 			sub: function(){
-				// var _this = this;
 				if(!this.special && this.name){
-				// 	this.items.map(function(item, index){
-				// 	console.log(item["name"] + " " + item["phone"]);
-				// });
 				this.$http.post('/inform/addgroup', {
 					name: this.name,
 					sign: this.$route.params.sign,
@@ -117,23 +109,18 @@ import chooselist from '../components/chooselist'
 						});
 						sessionStorage.setItem("group_list", JSON.stringify(gg));
 						this.$router.push({name:'group', params:{sign:this.$route.params.sign}});
-						// console.log(this.$store.state.group_infor[data.body.result]);
 					}
-					// console.log(data);
 				}, (err) => {
-					// console.log(err);
+					alert("发生错误!");
 				});
 			}else{
 				alert("输入有误!");
-				// this.$store.state.group_list.push({this.name});
 			}
 			},
 			hide: function(){
-				// var _this = this;
 				this.showlist = false;
 			},
 			chooselist: function(){
-				// var _this = this;
 				this.showlist = true;
 			},
 			fromlist: function(userc){

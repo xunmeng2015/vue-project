@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="container">
+		<div class="container" v-bind:style="con">
 		<input type="text" v-bind:style="input" v-on:focus="focus" v-on:blur="blur" placeholder="搜索记录" />
 		<router-link :to="{name: 'about', params:{sign: this.$route.params.sign }}"><div class="box">
 			<i class="right"></i>
@@ -12,9 +12,12 @@
 				<router-link :to="{name: 'inform', params:{sign: this.$route.params.sign }}"><li><!-- <span>***</span> -->新建通知<i class="right"></i></li></router-link>
 			</ul>
 			<br>
-		<div class="box" v-for="(item, index) in items">
-			<p class="title">{{item.title}}</p>
-			<p class="content">活动时间{{item.acttime}}</p>
+		<div class="box" v-for="(item, index) in items" v-bind:style="box">
+			<div class="area" v-bind:style="area">
+				<p class="title">{{item.title}}</p>
+				<p class="content">活动时间{{item.acttime}}</p>
+			</div>
+				<button class="remove">删除</button>
 		</div>
 		</div>
 		<keep-alive>
@@ -25,11 +28,26 @@
 
 <script>
 	import foot from "../components/foot"
+	import Vue from 'vue'
+	Vue.directive('touch', {
+		inserted:function(el){
+			el.focus();
+		}
+	})
 	export default{
 		data(){
 			return{
+				con:{
+					height: window.innerHeight + 'px'
+				},
 				input: {
 					width: window.innerWidth - 25 + "px",
+				},
+				box: {
+					width: window.innerWidth + 51 + "px",
+				},
+				area: {
+					width: window.innerWidth + "px",
 				},
 				items: (this.$store.state.history.length > 0) ? this.$store.state.history : JSON.parse(sessionStorage.getItem('history')),
 			}
@@ -48,16 +66,13 @@
 				this.$http.post('/inform/getuserinform', {
 					sign: this.$route.params.sign
 				}).then((data) => {
-					console.log(data);
 					this.$store.commit('setuser', data.body.friend);
 					this.$store.commit('setgroup', data.body.group);
 					sessionStorage.setItem("user_list", JSON.stringify(data.body.friend));
 					sessionStorage.setItem("group_list", JSON.stringify(data.body.group));
 				}, (err) => {
-					console.log(err);
 					alert("获取用户信息失败");
 				});
-				console.log("获取用户信息完毕");
 			}
 		},
 		methods:{
@@ -74,7 +89,6 @@
 					width: window.innerWidth - 25 + "px",
 					textAlign: "center"
 				}
-				// console.log(this.$router.params.sign);
 			},
 			fanzhuan:function(){
 				var _this = this;
@@ -126,8 +140,6 @@
 	.group{
 		width: 100%;
 		background-color: white;
-		/*height: 35px;
-		line-height: 35px;*/
 		padding-left: 10px;
 		display: inline-block;
 	}
@@ -136,12 +148,12 @@
 		background-color: white;
 		padding-left: 10px;
 		border-bottom: 1px solid #F7F7F7;
+		position: relative;
+		/*left: -60px;*/
 	}
 	.title{
 		height: 20px;
-		/*margin-top: 10px;*/
 		padding-top: 10px;
-		/*line-height: 40px;*/
 	}
 	.content{
 		height: 20px;
@@ -151,5 +163,21 @@
 	}
 	.history{
 		border-bottom: 1px solid #F7F7F7;
+	}
+	.area{
+		display: inline-block;
+		position: relative;
+		width: 320px;
+	}
+	.remove{
+		display: inline-block;
+		height: 50px;
+		float: right;
+		width: 50px;
+		-webkit-appearance : normal ;
+		appearance : normal ;
+		background-color: #FF4500;
+		border: none;
+		color: white;
 	}
 </style>

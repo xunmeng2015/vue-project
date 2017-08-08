@@ -27,13 +27,11 @@
 			},
 			methods:{
 				sub:function(){
-					console.log(this.name + " " + this.phone);
 					if(this.name && this.phone){
 						if(!/1\d{10}/.test(this.phone)){
 							alert("号码有误!");
 						}
 						else if(/[<>.*+-/"'!]/g.test(this.name)){
-						// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
 							alert("名字包含<>.*+-\"'!");
 						}else{
 							if(confirm("确定添加吗")){
@@ -145,9 +143,6 @@
 		position: relative;
 	}
 	li{
-		/*display: flex;
-		flex-direction: row;
-		justify-content: space-between;*/
 		height: 27px;
 		line-height: 27px;
 		margin-bottom: 5px;
@@ -172,7 +167,6 @@
 		width: 60px;
 		overflow: hidden;
 		white-space: nowrap;
-		/*-webkit-text-overflow: ellipsis;*/
 		text-overflow: ellipsis;
 		display: inline-block;
 	}
@@ -196,16 +190,13 @@
 		height: 25px;
 		margin-top: -5px;
 		width: 100%;
-		/*border:1px solid ;*/
 	}
 	.userp{
 		overflow: hidden;
 		display: inline-block;
-		/*clear: both;*/
 		text-align: center;
 	}
 	.delete{
-		/*display: inline-block;*/
 		float: right;
 		}
 </style>

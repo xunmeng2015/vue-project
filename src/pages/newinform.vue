@@ -10,12 +10,12 @@
 				<input type="text" id="title" v-model="title">
 			</div>
 			<div class="box">
-				<p class="title">活动时间<span class="warn">(格式:yyyy-MM-dd hh:mm)</span><span class="necessary">*</span><span v-text="nonumber" v-if="wrong" class="wrong"></span></p>
-				<input type="text" id="time" placeholder="如：2017-07-01 17:59" v-model="time" @blur="blur">
+				<p class="title">活动时间<!-- <span class="warn">(格式:yyyy-MM-dd hh:mm)</span> --><span class="necessary">*</span><span v-text="nonumber" v-if="wrong" class="warn"></span></p>
+				<input type="date" id="time"  v-model="time"><input type="time" class="hour" v-model="hour"  @blur="blur"><!-- placeholder="如：2017-07-01 17:59" -->
 			</div>
 			<div class="box add_area">
 				<p class="title">通知对象<span class="warn">(不填则只通知自己)</span></p>
-				<input type="text" id="time" v-model="addPhone" placeholder="请输入手机号码">
+				<input type="number" v-model="addPhone" placeholder="请输入手机号码">
 				<button class="add_btn" v-on:click="add">添加</button>
 				<span class="list" v-on:click="chooselist">从通讯录选择</span>
 			</div>
@@ -46,17 +46,6 @@
 import foot from '../components/foot'
 import chooselist from '../components/chooselist'
 import Vue from 'vue'
-Vue.directive("focus",{
-		inserted: function(el){
-			el.focus();
-		}
-	});
-Vue.filter('phoneType', function(value){
-	if(value.length > 11){
-		return value.substr(0, 11);
-	}
-	return value;
-});
 	export default{
 		data() {
 			return{
@@ -75,7 +64,8 @@ Vue.filter('phoneType', function(value){
 				groupselect: "",
 				groups: [],
 				fromlist: [],
-				nonumber: ""
+				nonumber: "",
+				hour: ""
 			}
 		},
 		components: {
@@ -96,7 +86,6 @@ Vue.filter('phoneType', function(value){
 					this.title = this.title.substr(0, 20);
 				}
 				if(/[<>.*+-/"'!]/g.test(this.title)){
-					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
 					this.special1 = true;
 				}else{
 					this.special1 = false;
@@ -104,18 +93,12 @@ Vue.filter('phoneType', function(value){
 			},
 			name:function(){
 				if(/[<>.*+-/"'!]/g.test(this.name)){
-					// this.name = this.name.length > 15 ? this.name.substr(0, 15) : this.name.substr(0, this.name.length - 1);;
 					this.special = true;
 				}else{
 					this.special = false;
 				}
 				if(this.name.length > 20){
 					this.name = this.name.substr(0, 20);
-				}
-			},
-			time:function(){
-				if(this.time.length > 30){
-					this.time = this.time.substr(0, 30);
 				}
 			}
 		},
@@ -142,51 +125,45 @@ Vue.filter('phoneType', function(value){
 				}
 			},
 			sub: function(){
-				if(!this.wrong && !this.special1 && !this.special && this.title && this.time && this.selected.length > 0){
+				if(!this.wrong && !this.special1 && !this.special && this.title && this.time && this.hour && this.selected.length > 0){
+					var dd = this.time + " " + this.hour;
 					this.$http.post('/inform/setinform', {
 					name: this.name,
 					title: this.title,
-					acttime: this.time,
-					actdate: Math.floor(new Date(this.time) / 1000),
+					acttime: dd,
+					actdate: Math.floor(new Date(dd) / 1000),
 					fromsign: this.$route.params.sign,
 					groupsign: this.groupselect,
 					people: this.items.concat(this.fromlist),
 					time: this.selected
 					}).then((data) => {
-						console.log(data);
 						this.$set(this.$store.state.detail, data.body.informsign, {
 							title: this.title,
-							acttime: this.time
+							acttime: dd
 						});
 						this.$store.commit('addinform', {
 							title: this.title,
-							acttime: this.time
-							// informsign: data.body.informsign
+							acttime: dd
 						});
 						this.$router.push({name:'first', params:{sign:this.$route.params.sign}});
 					}, (err) => {
 						alert("发生错误");
-						console.log(err);
 					});
 				}else{
 					alert("信息不完整!");
-					console.log(this.$store.state.sign);
-					console.log(this.$store.state);
 				}
-				// console.log(this.selected);
 			},
 			blur: function(){
-				if(!/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(this.time)){
-					// console.log("wrong");
+				var dd = this.time + " " + this.hour;
+				if(!/^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(dd)){
 					this.wrong = true;
-					// this.time = "";
 					this.nonumber = "格式出错!!";
 				}else{
-					if((new Date(this.time).getTime().toString().indexOf("NaN")) > -1){
+					if((new Date(dd.replace(/-/g, '/')).getTime().toString().indexOf("NaN")) > -1){
 						this.nonumber = "时间不对!!";
 						this.wrong = true;
-					}else if((Math.floor(new Date(this.time) / 1000) - Math.floor(new Date() / 1000)) < 3600){
-						this.nonumber = "提前一小时!";
+					}else if((Math.floor(new Date(dd.replace(/-/g, '/')) / 1000) - Math.floor(new Date() / 1000)) < 3600){
+						this.nonumber = "至少比现在晚一小时噢!";
 						this.wrong = true;
 					}else{
 					this.wrong = false;
@@ -200,7 +177,6 @@ Vue.filter('phoneType', function(value){
 				this.showlist = false;
 			},
 			fromchild: function(userc, groupc){
-				console.log(groupc);
 				if(groupc.name){
 					this.groups = [].concat({
 						name: groupc.name + "(分组)",
@@ -208,7 +184,6 @@ Vue.filter('phoneType', function(value){
 					});
 					this.show = true;
 					this.groupselect = groupc.groupsign;
-					console.log(this.groupselect);
 				}
 				if(userc.length > 0){
 					this.fromlist = userc;

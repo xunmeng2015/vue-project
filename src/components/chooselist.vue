@@ -21,16 +21,14 @@
 		props:["showlist", "showgroup", "checked"],
 			data(){
 				return{
-					groups: (this.$store.state.group_list > 0) ? this.$store.state.group_list : JSON.parse(sessionStorage.getItem('group_list')),
-					items: (this.$store.state.user_list > 0) ? this.$store.state.user_list : JSON.parse(sessionStorage.getItem('user_list')),
+					groups: (this.$store.state.group_list.length > 0) ? this.$store.state.group_list : JSON.parse(sessionStorage.getItem('group_list')),
+					items: (this.$store.state.user_list.length > 0) ? this.$store.state.user_list : JSON.parse(sessionStorage.getItem('user_list')),
 					groupc:[],
 					userc:[]
 				}
 			},
 			methods:{
 				sub:function(){
-					console.log(this.groupc);
-					// console.log(this.userc);
 					this.$emit("concat", this.userc, this.groupc);
 				},
 				hide: function(){

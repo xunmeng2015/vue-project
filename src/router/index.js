@@ -17,6 +17,7 @@ const adduser = resolve => require(['../pages/addUser'], resolve)//添加联系�
 const addgroup = resolve => require(['../pages/addgroup'], resolve)//添加联系人
 const choose = resolve => require(['../components/chooselist'], resolve)
 const about = resolve => require(['../pages/about'], resolve)
+const listen = resolve => require(['../pages/listen'], resolve)
 
 Vue.use(Router)
 
@@ -62,13 +63,13 @@ export default new Router({
 	  	component: addgroup
 	  },
 	  {
-	  	path: '/choose',
-	  	component: choose
-	  },
-	  {
 	  	path: '/about/:sign',
 	  	name: 'about',
 	  	component: about
+	  },
+	  {
+	  	path: '/listen',
+	  	component: listen
 	  }
   ]
 })

@@ -46,11 +46,9 @@ export default{
 				if(localStorage.getItem("codetime") != null){
 				var sub = 60 - (Math.floor(new Date().getTime() / 1000) - localStorage.getItem("codetime"));
 				if(sub > 0){
-					// console.log(_this.code_tip);
 					this.dis = true;
 					var a = setInterval(function(){
 						this.code_tip = sub + "s重新获取";
-						// console.log(_this.code_tip);
 						sub--;
 						if(sub < 0){
 							clearInterval(a);
@@ -66,9 +64,6 @@ export default{
 			if(this.phone.length > 11){
 				this.phone = this.phone.substr(0, 11);
 			}
-			// if(/[^0-9]/g.test(this.phone)){
-			// 	this.phone = this.phone.length > 11 ? this.phone.substr(0, 11) : this.phone.substr(0, this.phone.length - 1);
-			// }
 			if(!/^1\d{10}$/g.test(this.phone)){
 				this.wrong = true;
 			}else{
@@ -86,9 +81,8 @@ export default{
 			var _this = this;
 			if(!_this.wrong && _this.phone){
 				this.$http.post('/inform/getCode',{phone:this.phone}, {timeout:10000}).then((data) => {
-					console.log(data);
 				}, (err) => {
-					console.log(err);
+					alert("发生错误!");
 				});
 				_this.dis = true;
 				localStorage.setItem("codetime", Math.floor(new Date().getTime() / 1000));
@@ -113,16 +107,10 @@ export default{
 					if(sign == "no"){
 						alert("验证码不对！");
 					}else{
-						console.log(data)
-						// this.$store.commit('setuser', data.body.friend);
-						// this.$store.commit('setgroup', data.body.group);
 						this.$store.commit('savesign', data.body.sign);
 						this.$store.commit('setinform', data.body.history);
 						sessionStorage.setItem("history", JSON.stringify(data.body.history));
-						// sessionStorage.setItem("user_list", JSON.stringify(data.body.friend));
-						// sessionStorage.setItem("group_list", JSON.stringify(data.body.group));
 						this.$router.push({name:'first', params:{sign:data.body.sign}});
-						// console.log(this.$store.)
 					}
 				}, (err) => {
 					console.log(err);
@@ -174,21 +162,18 @@ export default{
 		border: 1px solid #E0E0E0;
 	}
 	#code{		/*验证码输入框*/
-		/*border-left: none;*/
 		border-bottom-left-radius: 10px;
 		border-top-left-radius: 10px;
 		outline: none;
 		width:100px;
 	}
 	#phone{		/*手机号码输入框*/
-		/*border-right: none;*/
 		border-top-right-radius: 10px;
 		border-bottom-right-radius: 10px;
 		width: 158px;
 		outline: none;
 	}
 	#get_code{	/*获取验证码按钮*/
-		/*border-left-style: none;*/
 		 width:95px;
 		 height: 34px;
 		 border-top-right-radius: 10px;
@@ -203,7 +188,7 @@ export default{
 	}
 	#sub{		/*提交按钮*/
 		height: 34px;
-		width: 210px;
+		width: 200px;
 		border-radius: 10px;
 		border: none;
 		background-color: #EAEAEA;
