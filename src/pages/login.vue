@@ -3,7 +3,7 @@
 		<div v-bind:style="login" class="login_area">
 			<div class="login_box">
 				<div class="item">
-					<p class="area">+86</p><input type="number" id="phone" v-model="phone" placeholder="请输入手机号码" />
+					<input type="number" id="phone" v-model="phone" placeholder="请输入手机号码" />
 				</div>
 				<div class="item">
 					<p class="warn" v-if="wrong">请输入正确的手机号码</p>
@@ -126,7 +126,7 @@ export default{
 
 <style lang="css" scoped>
 	#login{
-		background: url('../assets/img/1.jpg');
+		background: url('../assets/img/11.jpg');
 		background-size: 110% 100%;
 	}
 	.login_area{
@@ -147,16 +147,7 @@ export default{
 	.item{		/*flex单元*/
 		margin-bottom: 15px;
 		width: 210px;
-	}
-	.area{		/*区号*/
-		background: #EAEAEA;
-		height: 32px;
-		border: 1px solid #E0E0E0;
-		border-top-left-radius: 10px;
-		border-bottom-left-radius: 10px;
-		width: 35px;
-		float: left;
-		line-height: 32px;
+		text-align: center;
 	}
 	input{		/*输入框*/
 		height: 30px;
@@ -167,15 +158,16 @@ export default{
 		border-top-left-radius: 10px;
 		outline: none;
 		width:100px;
+		padding-left: 5px;
 	}
 	#phone{		/*手机号码输入框*/
-		border-top-right-radius: 10px;
-		border-bottom-right-radius: 10px;
-		width: 158px;
+		border-radius: 10px;
+		width: 197px;
 		outline: none;
+		padding-left: 5px;
 	}
 	#get_code{	/*获取验证码按钮*/
-		 width:95px;
+		 width:97px;
 		 height: 34px;
 		 border-top-right-radius: 10px;
 		 border-bottom-right-radius: 10px;
@@ -189,10 +181,11 @@ export default{
 	}
 	#sub{		/*提交按钮*/
 		height: 34px;
-		width: 200px;
+		width: 205px;
 		border-radius: 10px;
 		border: none;
 		background-color: #EAEAEA;
+		border: 1px solid #E0E0E0;
 	}
 	#sub:hover{
 		background-color: white;

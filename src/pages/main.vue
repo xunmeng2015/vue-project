@@ -211,8 +211,8 @@
 		border-bottom: 1px solid #F7F7F7;
 	}
 	.area{
-		/*display: inline-block;*/
-		float: left;
+		display: inline-block;
+		/*float: left;*/
 		position: relative;
 		width: 320px;
 		-webkit-backface-visibility: hidden;

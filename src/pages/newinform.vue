@@ -131,7 +131,7 @@ import Vue from 'vue'
 					name: this.name,
 					title: this.title,
 					acttime: dd,
-					actdate: Math.floor(new Date(dd) / 1000),
+					actdate: Math.floor(new Date(dd.replace(/-/g, '/')) / 1000),
 					fromsign: this.$route.params.sign,
 					groupsign: this.groupselect,
 					people: this.items.concat(this.fromlist),
@@ -141,12 +141,18 @@ import Vue from 'vue'
 							title: this.title,
 							acttime: dd
 						});
+						var uu = JSON.parse(sessionStorage.getItem("history")).concat({
+							title: this.title,
+							acttime: dd
+						});
+						sessionStorage.setItem("history", JSON.stringify(uu));
 						this.$store.commit('addinform', {
 							title: this.title,
 							acttime: dd
 						});
 						this.$router.push({name:'first', params:{sign:this.$route.params.sign}});
 					}, (err) => {
+						// alert(new Date(dd).getTime());
 						alert("发生错误");
 					});
 				}else{
