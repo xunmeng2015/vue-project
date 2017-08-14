@@ -68,7 +68,7 @@
 						}).then((data) => {
 							console.log(data);
 							if(data.body.result == "success"){
-								this.$store.commit('removemember', this.currsign, idx);
+								this.$store.commit('removemember', {sign:this.currsign, idx:idx});
 							}else{
 								alert("删除失败");
 							}

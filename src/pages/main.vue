@@ -5,7 +5,7 @@
 		<router-link :to="{name: 'about', params:{sign: this.$route.params.sign }}"><div class="box">
 			<i class="right"></i>
 			<p class="title">欢迎使用小信使</p>
-			<p class="content">点击查看详情</p>
+			<p class="content">点击查看使用说明</p>
 		</div></router-link>
 		<p style="font-size:12px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">历史通知</p>
 		<ul>
@@ -17,7 +17,7 @@
 				<p class="title">{{item.title}}</p>
 				<p class="content">活动时间{{item.acttime}}</p>
 			</div>
-				<span class="remove">删除</span>
+				<button class="chexiao" :disabled="(!!parseInt(item.isign))" @click="cancel(item.informsign, index)">撤回</button><button :disabled="(!parseInt(item.isign))" @click="remove(item.informsign, index)" class="remove">删除</button>
 		</div>
 		</div>
 		<keep-alive>
@@ -48,7 +48,7 @@
 					width: window.innerWidth - 25 + "px",
 				},
 				box: {
-					width: window.innerWidth + 51 + "px",
+					width: window.innerWidth + 102 + "px",
 				},
 				area: {
 					width: window.innerWidth + "px",
@@ -115,16 +115,16 @@
 				this.sub_x = this.start_x - this.temp_x;
 				if(this.sub_x < 0){
 					event.target.parentNode.style.right = "0px";
-				}else if(0 < this.sub_x && this.sub_x < 60){
+				}else if(0 < this.sub_x && this.sub_x < 120){
 					event.target.parentNode.parentNode.style.right = this.sub_x + "px";
 				}else{
-					event.target.parentNode.parentNode.style.right = "60px";
+					event.target.parentNode.parentNode.style.right = "112px";
 				}
 			},
 			end: function(event, index){
 				event.stopPropagation();
-				if(this.sub_x > 35){
-					event.target.parentNode.parentNode.style.right = "60px";
+				if(this.sub_x > 50){
+					event.target.parentNode.parentNode.style.right = "112px";
 					this.idx = index;
 				}else{
 					event.target.parentNode.parentNode.style.right = "0px";
@@ -138,6 +138,42 @@
 					document.getElementsByClassName('inform_box')[this.idx].style.right = "0px";
 					document.getElementsByClassName('inform_box')[this.idx].style.transition = "right 0.5s";
 					this.idx = -1;
+				}
+			},
+			cancel: function(sign, index){
+				console.log(index + " " + sign);
+				if(confirm('撤回以后将不再发送通知，确定吗')){
+					this.$http.post('/inform/removeinform', {
+						sign: this.$route.params.sign,
+						informsign: sign,
+						type: 'cancel'
+					}).then(data => {
+						if(data.body.result == 'no'){
+							alert('撤回通知失败，请重试');
+						}else{
+							this.$store.commit('removeinform', index);
+							sessionStorage.setItem("history", JSON.stringify(this.$store.state.history));
+							alert("撤回通知成功");
+						}
+					})
+				}
+			},
+			remove: function(sign, index){
+				console.log(index + " " + sign);
+				if(confirm('确定删除吗？')){
+					this.$http.post('/inform/removeinform', {
+						sign: this.$route.params.sign,
+						informsign: sign,
+						type: 'remove'
+					}).then(data => {
+						if(data.body.result == 'no'){
+							alert('删除失败，请重试');
+						}else{
+							this.$store.commit('removeinform', index);
+							sessionStorage.setItem("history", JSON.stringify(this.$store.state.history));
+							alert("删除成功");
+						}
+					})
 				}
 			}
 		}
@@ -156,6 +192,11 @@
 		height: 50px;
 		line-height: 50px;
 		padding-left: 10px;
+	}
+	.container{
+		overflow-y: auto;
+		overflow-x: hidden;;
+		margin-bottom: 60px;
 	}
 	i.right{
 		display: inline-block;
@@ -217,7 +258,7 @@
 		width: 320px;
 		-webkit-backface-visibility: hidden;
 	}
-	.remove{
+	.remove, .chexiao{
 		width: 50px;
 		height: 50px;
 		display: inline-block;
@@ -226,6 +267,14 @@
 		line-height: 50px;
 		float: right;
 		-webkit-appearance : normal ;
+		border:none;
 		color: white;
 	}
+	.chexiao{
+		background-color: gray;
+	}
+	:disabled{
+		background-color: #F5F5F5;
+		color: gray;
+	};
 </style>

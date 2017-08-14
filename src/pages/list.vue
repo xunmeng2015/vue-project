@@ -116,7 +116,8 @@
 				this.tempname = name;
 				this.tempphone = phone;
 				this.idx = idx;
-				this.show = true;			},
+				this.show = true;
+			},
 			hide: function(){			//隐藏联系人函数
 				this.show = false;
 				this.disabled = true;
@@ -174,10 +175,10 @@
 								this.show = false;
 								this.disabled = true;
 								this.btntext = "点击修改";
-								this.$store.commit('updateuser',{
+								this.$store.commit('updateuser',{obj:{
 									name: this.changename,
 									phone: this.changephone
-								}, this.idx);
+								}, idx:this.idx});
 								sessionStorage.setItem("user_list", JSON.stringify(this.$store.state.user_list));
 								alert("修改成功");
 							}else{

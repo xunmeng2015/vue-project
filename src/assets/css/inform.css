@@ -89,6 +89,10 @@
 		height: 30px;
 		line-height: 30px;
 	}
+	.select_list{
+		height: 105px;
+		overflow-y: auto;
+	}
 	.remove{
 		color: red;
 		float: right;
@@ -125,4 +129,9 @@
 		float: right;
 		display: inline-block;
 		height: 20px;
+	}
+	hr{
+		height: 1px;
+		border:none;
+		background-color: #E5E5E5;
 	}

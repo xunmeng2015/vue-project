@@ -8,6 +8,7 @@
 				<router-link :to="{name:'adduser', params:{sign: this.$route.params.sign}}"><li>添加联系人<i class="right"></i></li></router-link>
 				<router-link :to="{name:'addgroup', params:{sign: this.$route.params.sign}}"><li>添加分组<i class="right"></i></li></router-link>
 				<br>
+				<li>设置登录密码<i class="right"></i></li><br>
 				<li>更多功能</li>
 				<li>敬请期待</li><br>
 				<li v-on:click="logout">退出系统</li>

@@ -27,10 +27,17 @@
 					</ul>
 				</div>
 			<div class="select_box">
-				<p><input type="checkbox" name="time" id="oneDay" value="86400" v-model="selected"><label for="oneDay" class="timetip">提前一天通知</label></p>
-				<p><input type="checkbox" name="time" id="threeHour" value="10800" v-model="selected"><label for="threeHour" class="timetip">提前三小时通知</label></p>
-				<p><input type="checkbox" name="time" id="oneHour" value="3600" v-model="selected"><label for="oneHour" class="timetip">提前一小时通知</label></p>
-				<button v-on:click="sub" class="sub_btn">提交</button>
+				<div class="select_list">
+					<p><input type="checkbox" name="time" id="oneDay" value="86400" v-model="selected"><label for="oneDay" class="timetip">活动前一天通知</label></p>
+					<p><input type="checkbox" name="time" id="threeHour" value="10800" v-model="selected"><label for="threeHour" class="timetip">活动前三小时通知</label></p>
+					<p><input type="checkbox" name="time" id="oneHour" value="3600" v-model="selected"><label for="oneHour" class="timetip">活动前一小时通知</label></p>
+					<p><input type="checkbox" name="time" id="thirtmin" value="1800" v-model="selected"><label for="thirtmin" class="timetip">活动前30分钟通知</label></p>
+					<hr>
+					<p><input type="checkbox" name="time" id="fifmin" value="900" v-model="selected"><label for="fifmin" class="timetip">活动15分钟通知</label></p>
+					<p><input type="checkbox" name="time" id="twoDay" value="172800" v-model="selected"><label for="twoDay" class="timetip">活动前两天通知</label></p>
+					<p><input type="checkbox" name="time" id="threeDay" value="259200" v-model="selected"><label for="threeDay" class="timetip">活动前三天通知</label></p>
+					<p><input type="checkbox" name="time" id="fiveDay" value="345600" v-model="selected"><label for="fiveDay" class="timetip">活动前五天通知</label></p>
+					</div><button v-on:click="sub" class="sub_btn">提交</button>
 			</div>
 		</div>
 		<keep-alive>
@@ -100,6 +107,12 @@ import Vue from 'vue'
 				if(this.name.length > 20){
 					this.name = this.name.substr(0, 20);
 				}
+			},
+			selected: function(){
+				if(this.selected.length > 3){
+					alert("最多只能选三个时间段!");
+					this.selected = this.selected.slice(0, 3);
+				}
 			}
 		},
 		methods: {
@@ -148,8 +161,11 @@ import Vue from 'vue'
 						sessionStorage.setItem("history", JSON.stringify(uu));
 						this.$store.commit('addinform', {
 							title: this.title,
-							acttime: dd
+							informsign: data.body.informsign,
+							acttime: dd,
+							isign: 0
 						});
+						console.log(this.$store.state.history);
 						this.$router.push({name:'first', params:{sign:this.$route.params.sign}});
 					}, (err) => {
 						// alert(new Date(dd).getTime());

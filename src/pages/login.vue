@@ -110,6 +110,7 @@ export default{
 					}else{
 						this.$store.commit('savesign', data.body.sign);
 						this.$store.commit('setinform', data.body.history);
+						console.log(data.body.history);
 						sessionStorage.setItem("history", JSON.stringify(data.body.history));
 						this.$router.push({name:'first', params:{sign:data.body.sign}});
 					}
