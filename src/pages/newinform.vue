@@ -148,7 +148,7 @@ import Vue from 'vue'
 					acttime: dd,
 					actdate: Math.floor(new Date(dd.replace(/-/g, '/')) / 1000),
 					fromsign: this.$route.params.sign,
-					groupsign: this.groups,
+					groupsign: this.groupselect,
 					people: this.items.concat(this.fromlist),
 					time: this.selected
 					}).then((data) => {
