@@ -3,18 +3,25 @@
 		<div v-bind:style="login" class="login_area">
 			<div class="login_box">
 				<div class="item">
-					<input type="number" id="phone" v-model="phone" placeholder="请输入手机号码" />
+					<p class="title">小信使</p>
+				</div>
+				<div class="item">
+					<input type="number" id="phone" v-model="phone" placeholder="输入手机号码" />
 				</div>
 				<div class="item">
 					<p class="warn" v-if="wrong">请输入正确的手机号码</p>
 				</div>
-				<div class="item">
-					<input type="number" id="code" v-model="code" /><button v-text="code_tip" v-on:click="getCode" :disabled="dis" id="get_code"></button>
+				<div class="item" v-if="logintype">
+					<p><input type="number" id="code" v-model="code" v-bind:style="codeinput" placeholder="输入验证码"  /><button v-text="code_tip" v-on:click="getCode" :disabled="dis" id="get_code"></button></p>
+				</div>
+				<div class="item" v-else>
+					<input type="password" id="pass" v-model="pass" placeholder="输入登录密码" />
 				</div>
 				<div class="item">
-					<button id="sub" v-on:click="sub">登录</button>
+					<button id="sub" v-on:click="sub">登 录</button>
 				</div>
 			</div>
+			<h1 class="type" @click="change" v-text="type_tip"></h1>
 		</div>
 	</div>
 	</div>
@@ -26,6 +33,7 @@
 	code_tip代表按钮内容
  -->
 <script>
+import md5 from '../assets/js/login.js'
 export default{
 	data (){
 		return {
@@ -35,8 +43,14 @@ export default{
 			login:{
 				height: window.innerHeight + "px"
 			},
+			codeinput:{
+				width: window.innerWidth * 0.8 * 0.6 - 2 + "px"
+			},
 			dis: false,
-			code: ""
+			code: "",
+			pass: "",
+			logintype: true,
+			type_tip: "用密码登录  >>",
 		}
 	},
 	beforeCreate: function(){
@@ -75,19 +89,33 @@ export default{
 			if(this.code.length > 8){
 				this.code = this.code.substr(0, 8);
 			}
+		},
+		pass: function(){
+			if(this.pass.length > 20){
+				this.pass = this.pass.substr(0, 20);
+			}
 		}
 	},
 	methods: {
+		change: function(){
+			this.logintype = !this.logintype;
+			if(this.logintype){
+				this.type_tip = '用密码登录 >>';
+			}else{
+				this.type_tip = '验证码登录 >>'
+			}
+		},
 		getCode: function(){
 			var _this = this;
+			var s = 60;
 			if(!_this.wrong && _this.phone){
 				this.$http.post('/inform/getCode',{phone:this.phone}, {timeout:10000}).then((data) => {
 				}, (err) => {
 					alert("发生错误!");
+					s=0;
 				});
 				_this.dis = true;
 				localStorage.setItem("codetime", Math.floor(new Date().getTime() / 1000));
-				var s = 60;
 				var a = setInterval(function(){
 					_this.code_tip = s + "s重新获取";
 					s--;
@@ -102,11 +130,16 @@ export default{
 			}
 		},
 		sub: function(){
-			if(!this.wrong && /^\d{6}$/.test(this.code) && this.phone){
-				this.$http.post('/inform/login', {phone: this.phone, code:this.code}, {timeout: 10000}).then((data) => {
+			if(!this.wrong && /^\d{6}$/.test(this.code) && this.phone || !this.logintype && this.pass && this.phone){
+				this.$http.post('/inform/login', {
+						phone: this.phone, 
+						// code:this.code,
+						code: this.logintype ? this.code : md5(this.pass),
+						logintype: this.logintype ? 'code' : 'pass'
+					}, {timeout: 10000}).then((data) => {
 					var sign = data.body.sign;
 					if(sign == "no"){
-						alert("验证码不对！");
+						this.logintype ? alert("验证码不对！") : alert("密码不对");
 					}else{
 						this.$store.commit('savesign', data.body.sign);
 						this.$store.commit('setinform', data.body.history);
@@ -116,6 +149,7 @@ export default{
 					}
 				}, (err) => {
 					console.log(err);
+					alert("登录超时，请重试！")
 				});
 			}else{
 				alert("信息输入有误！");
@@ -127,68 +161,107 @@ export default{
 
 <style lang="css" scoped>
 	#login{
-		background: url('../assets/img/11.jpg');
+		background: url('../assets/img/44.png');
 		background-size: 110% 100%;
 	}
 	.login_area{
-		background-color: rgba(255, 255, 255, 0.7);
 		display: -webkit-box; 
 	    display: -ms-flexbox; 
 	    display: -webkit-flex; 
 	    display: flex; 
-		-webkit-box-align: center;
+		/*-webkit-box-align: center;
 	    -moz-align-items: center;
 	    -webkit-align-items: center;
-	    align-items: center;
+	    align-items: center;*/
 		-webkit-box-pack: center;
 	    -moz-justify-content: center;
 	    -webkit-justify-content: center;
 	    justify-content: center;
 	}
+	.title{
+		color: white;
+		font-size: 25px;
+		padding-bottom: 10px;
+		font-family: "仿宋";
+	}
 	.item{		/*flex单元*/
-		margin-bottom: 15px;
-		width: 210px;
+		margin-bottom: 10px;
 		text-align: center;
 	}
 	input{		/*输入框*/
-		height: 30px;
-		border: 1px solid #E0E0E0;
+		height: 37px;
+		margin: 0px;
+		padding: 0px;
+		border: 1px solid white;
+		border-right-color: #E5E5E5;
+		border-radius: 0;
 	}
 	#code{		/*验证码输入框*/
-		border-bottom-left-radius: 10px;
-		border-top-left-radius: 10px;
 		outline: none;
 		width:100px;
-		padding-left: 5px;
+		/*padding-left: 5px;*/
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+		font-size: 15px;
+		border-top-width: 0px;
+		border-bottom-width: 0px;
+		width: 50%;
+		text-indent: 5px;
 	}
-	#phone{		/*手机号码输入框*/
-		border-radius: 10px;
-		width: 197px;
+	#phone, #pass{		/*手机号码输入框*/
+		width: 100%;
 		outline: none;
-		padding-left: 5px;
+		border-radius: 5px;
+		font-size: 15px;
+		text-indent: 5px;
+		border:none;
 	}
 	#get_code{	/*获取验证码按钮*/
-		 width:97px;
-		 height: 34px;
-		 border-top-right-radius: 10px;
-		 border-bottom-right-radius: 10px;
-		 border: none;
-		 background-color: #EAEAEA;
+		width: 40%;
+		height: 37px;
+		border: none;
+		color: black;
+		background-color: white;
+		float: right;
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		font-size: 13px;
 	}
 	.warn{		/*格式警告*/
-		width: 200px;
-		text-align: center;
-		color: red;
+		width: 100%;
+		text-align: right;
+		color: white;
+		font-weight: bold;
 	}
 	#sub{		/*提交按钮*/
-		height: 34px;
+		height: 37px;
 		width: 205px;
-		border-radius: 10px;
 		border: none;
-		background-color: #EAEAEA;
+		width: 100%;
 		border: 1px solid #E0E0E0;
+		border-radius: 5px;
+		color: white;
+		font-size: 15px;
+		background-color: rgba(30, 130, 100, 0.3);
 	}
-	#sub:hover{
-		background-color: white;
+	.login_box{
+		width: 80%;
+		height: 180px;
+		/*padding-bottom: 30px;*/
+		margin-top: 80px;
+	}
+	.type{
+		color: black;
+		font-size: 14px;
+		position: fixed;
+		bottom:0;
+		left: 50%;
+		margin-left: -50px;
+		margin-bottom: 80px;
+		text-align: left;
+		width: 110px;
+		/*text-align: center;*/
+		color: white;
+		/*width: 1000px;*/
 	}
 </style>
