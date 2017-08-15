@@ -128,6 +128,7 @@ import Vue from 'vue'
 			remove: function(name, idx){
 				if(name == "groups"){
 					this.groups.splice(idx, 1);
+					this.groupselect = "";
 				}else if(name == "fromlist"){
 					this.fromlist.splice(idx, 1);
 				}else{
@@ -138,6 +139,7 @@ import Vue from 'vue'
 				}
 			},
 			sub: function(){
+				// console.log(this.groupselect);
 				if(!this.wrong && !this.special1 && !this.special && this.title && this.time && this.hour && this.selected.length > 0){
 					var dd = this.time + " " + this.hour;
 					this.$http.post('/inform/setinform', {
@@ -146,7 +148,7 @@ import Vue from 'vue'
 					acttime: dd,
 					actdate: Math.floor(new Date(dd.replace(/-/g, '/')) / 1000),
 					fromsign: this.$route.params.sign,
-					groupsign: this.groupselect,
+					groupsign: this.groups,
 					people: this.items.concat(this.fromlist),
 					time: this.selected
 					}).then((data) => {
