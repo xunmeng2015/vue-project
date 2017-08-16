@@ -1,6 +1,6 @@
 # inform
 
-> a small project
+> vue project
 
 ## Build Setup
 
