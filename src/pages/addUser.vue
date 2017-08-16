@@ -92,6 +92,21 @@ import foot from '../components/foot'
 </script>
 
 <style scoped>
+	input{
+		border-radius: 0px;
+		width: 100%;
+		padding: none;
+		margin: none;
+		text-indent: 2px;
+		padding-left: 0px;
+	}
+	button{
+		-webkit-appearance:none;
+		border-radius: 5px;
+		background-color: #F8F8F8;
+		border:1px solid #E5E5E5;
+		box-shadow: 0px 0px 10px 1px #E5E5E5;
+	}
 	.box{
 		height: auto;
 		background-color: white;
@@ -110,7 +125,7 @@ import foot from '../components/foot'
 	.box input{
 		border: none;
 		border-bottom: 1px solid black;
-		width: 99%;
+		/*width: 100%;*/
 		outline: none;
 		margin-bottom: 10px;
 	}

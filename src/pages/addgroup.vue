@@ -52,7 +52,10 @@ import chooselist from '../components/chooselist'
 				if(this.addPhone.length > 11){
 					this.addPhone = this.addPhone.substr(0, 11);
 				}
-				if(!/1\d{10}/.test(this.addPhone)){
+				if(this.addPhone.length == 0){
+					this.wrong = false;
+				}
+				else if(!/1\d{10}/.test(this.addPhone)){
 					this.wrong = true;
 				}else{
 					this.wrong = false;
@@ -74,9 +77,13 @@ import chooselist from '../components/chooselist'
 				if(!/^1\d{10}$/.test(this.addPhone)){
 					alert("请输入正确的号码");
 				}else{
-					this.items.push({name: this.addPhone,
+					if(JSON.stringify(this.items).indexOf(this.addPhone) == -1){
+						this.items.push({name: this.addPhone,
 									 phone: this.addPhone});
-					this.show = true;
+						this.show = true;
+					}else{
+						alert("号码已存在!");
+					}
 				}
 				this.addPhone = "";
 				this.wrong = false;
@@ -125,8 +132,14 @@ import chooselist from '../components/chooselist'
 			},
 			fromlist: function(userc){
 				if(userc.length > 0){
+					userc.map(sele => {
+						console.log(sele.phone);
+						if(JSON.stringify(this.items).indexOf(sele.phone) == -1){
+							this.items.push(sele);
+						}
+					});
 					this.show = true;
-					this.items = this.items.concat(userc);
+					// this.items = this.items.concat(userc);
 				}
 				console.log(this.items);
 			}
@@ -135,9 +148,24 @@ import chooselist from '../components/chooselist'
 </script>
 
 <style scoped>
-.container{
-	width:100%;
-}
+	input{
+		border-radius: 0px;
+		width: 100%;
+		padding: none;
+		margin: none;
+		text-indent: 2px;
+		padding-left: 0px;
+	}
+	button{
+		-webkit-appearance:none;
+		border-radius: 5px;
+		background-color: #F8F8F8;
+		border:1px solid #E5E5E5;
+		box-shadow: 0px 0px 10px 1px #E5E5E5;
+	}
+	.container{
+		width:100%;
+	}
 	.box{
 		height: auto;
 		background-color: white;

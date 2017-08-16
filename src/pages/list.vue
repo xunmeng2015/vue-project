@@ -8,21 +8,21 @@
 		<ul v-if="seen">
 				<li v-for="(group, index) in groups" v-on:click="showgroup(group.name, group.groupsign, index)">{{group.name}}</li>
 		</ul>
-		<p style="font-size:15px;height:20px;line-height:20px;margin-left: 10px;margin-top:5px;margin-bottom:5px;color:gray">联系人</p>
+		<p class="list_head">联系人</p>
 		<ul>
 			<li v-for="(item, index) in items" v-on:click="detail(index, item.name, item.phone)">{{item.name}}</li>
 		</ul>
 		<div class="container" v-if="show" v-on:click="hide">
-			<div v-on:click="prevent($event)">
-			<div class="show">
-				<p class="title">昵称<span v-if="special" class="wrong">   昵称不能包含<>.*+-/"'!</span></p>
-				<input type="text" id="name" v-model="changename" :disabled="disabled">
-				<p class="title">联系方式<span v-if="wrong" class="wrong">格式出错!!</span></p>
-				<input type="number" id="name" v-model="changephone" :disabled="disabled">
-				<button class="add_btn" v-on:click="change" v-text="btntext"></button>
-				<span class="remove" v-on:click="remove">点击删除</span>
-			</div>
-			<button style="width:250px;background-color:white;border:solid 1px white;margin-top:5px;" v-on:click="sub">确定</button>
+			<div v-on:click="prevent($event)" class="infor-area">
+				<div class="show">
+					<p class="title">昵称<span v-if="special" class="wrong">   昵称不能包含<>.*+-/"'!</span></p>
+					<input type="text" id="name" v-model="changename" :disabled="disabled">
+					<p class="title">联系方式<span v-if="wrong" class="wrong">格式出错!!</span></p>
+					<input type="number" id="name" v-model="changephone" :disabled="disabled">
+					<button class="add_btn" v-on:click="change" v-text="btntext"></button>
+					<span class="remove" v-on:click="remove">点击删除</span>
+				</div>
+				<button class="change-btn" v-on:click="sub">确定</button>
 			</div>
 		</div>
 		</div>

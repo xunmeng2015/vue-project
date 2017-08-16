@@ -39,6 +39,7 @@ export default{
 	font-family: "正楷";
 	line-height: 20px;
 	margin-bottom:50px;
+  background-color: white;
 }
 h1{
 	margin-bottom: 10px;

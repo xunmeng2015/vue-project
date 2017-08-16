@@ -127,13 +127,11 @@
 		display: flex;
 		flex-direction: column;
 		height: auto;
-		/*justify-content: space-around;*/
 	}
 	li{
 		background-color: white;
 		height: 40px;
 		line-height: 40px;
-		/*margin-bottom: 10px;*/
 		padding-left: 10px;
 		border-bottom: 1px solid #F7F7F7;
 	}
@@ -181,7 +179,8 @@
 		margin-bottom: 10px;
 		border-radius: 0px;
 		padding: 0px;
-		height: 25px;
+		height: 30px;
+		border-radius: 3px;
 		border: 1px solid lightgray;
 		text-indent: 2px;
 		font-size: 14px;
@@ -196,7 +195,10 @@
 		height: 25px;
 		background-color: #F1F1F1;
 		border:1px solid #F5F5F5;
-		box-shadow: 0px 0px 10px 1px lightgray;
+		box-shadow: 0px 1px 5px 1px lightgray;
+		height: 30px;
+		border-radius: 3px;
+		font-size: 14px;
 	}
 	.warn{		/*格式警告*/
 		width: 100%;
